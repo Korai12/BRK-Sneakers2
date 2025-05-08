@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BRK Sneakers - Products</title>
+    <link rel="stylesheet" href="/frontend/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+                <a href="index.html">
+                    <img src="images/logo.svg" alt="BRK Sneakers Logo">
+                    <span>BRK Sneakers</span>
+                </a>
+            </div>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="products.html" class="active">Products</a></li>
+                    <li><a href="#">Men</a></li>
+                    <li><a href="#">Women</a></li>
+                    <li><a href="#">Kids</a></li>
+                    <li><a href="#">Sale</a></li>
+                </ul>
+            </nav>
+            <div class="header-actions">
+                <a href="#" class="search-icon"><i class="fas fa-search"></i></a>
+                <a href="#" class="cart-icon"><i class="fas fa-shopping-cart"></i><span class="cart-count">0</span></a>
+                <a href="#" class="user-icon"><i class="fas fa-user"></i></a>
+                <div class="mobile-menu-button">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Products Banner -->
+    <section class="products-banner">
+        <div class="container">
+            <h1>Our Products</h1>
+            <p>Browse our extensive collection of quality footwear</p>
+        </div>
+    </section>
+
+    <!-- Search and Filter Section -->
+    <section class="search-filter">
+        <div class="container">
+            <div class="search-box">
+                <input type="text" id="product-search" placeholder="Search for products...">
+                <button id="search-button"><i class="fas fa-search"></i></button>
+            </div>
+            
+            <div class="filters">
+                <div class="filter-group">
+                    <label for="category-filter">Category:</label>
+                    <select id="category-filter">
+                        <option value="all">All Categories</option>
+                        <option value="sneakers">Sneakers</option>
+                        <option value="casual">Casual</option>
+                        <option value="sports">Sports</option>
+                        <option value="women">Women</option>
+                        <option value="kids">Kids</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label for="price-filter">Price Range:</label>
+                    <select id="price-filter">
+                        <option value="all">All Prices</option>
+                        <option value="under-50">Under $50</option>
+                        <option value="50-100">$50 - $100</option>
+                        <option value="100-150">$100 - $150</option>
+                        <option value="over-150">Over $150</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label for="sort-by">Sort By:</label>
+                    <select id="sort-by">
+                        <option value="popularity">Popularity</option>
+                        <option value="price-low">Price: Low to High</option>
+                        <option value="price-high">Price: High to Low</option>
+                        <option value="newest">Newest First</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Grid -->
+    <section class="products-section">
+        <div class="container">
+            <div class="products-grid" id="products-container">
+                <!-- Product cards will go here - initially static, later dynamic with API -->
+                <div class="product-card" data-product-id="product-1">
+                    <div class="product-image">
+                        <img src="images/products/product1.jpg" alt="BRK Runner">
+                        <div class="product-tag new">New</div>
+                        <div class="product-actions">
+                            <button class="like-button"><i class="far fa-heart"></i></button>
+                            <button class="quick-view"><i class="fas fa-eye"></i></button>
+                            <button class="add-to-cart"><i class="fas fa-shopping-cart"></i></button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <h3>BRK Runner</h3>
+                        <p class="product-description">Lightweight running shoe with responsive cushioning</p>
+                        <div class="product-bottom">
+                            <p class="product-price">$129.99</p>
+                            <div class="product-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                                <span>(24)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="product-card" data-product-id="product-2">
+                    <div class="product-image">
+                        <img src="images/products/product2.jpg" alt="BRK Urban">
+                        <div class="product-actions">
+                            <button class="like-button"><i class="far fa-heart"></i></button>
+                            <button class="quick-view"><i class="fas fa-eye"></i></button>
+                            <button class="add-to-cart"><i class="fas fa-shopping-cart"></i></button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <h3>BRK Urban</h3>
+                        <p class="product-description">Street-style sneaker for everyday comfort</p>
+                        <div class="product-bottom">
+                            <p class="product-price">$99.99</p>
+                            <div class="product-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="far fa-star"></i>
+                                <span>(18)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="product-card" data-product-id="product-3">
+                    <div class="product-image">
+                        <img src="images/products/product3.jpg" alt="BRK Pro">
+                        <div class="product-tag sale">Sale</div>
+                        <div class="product-actions">
+                            <button class="like-button"><i class="far fa-heart"></i></button>
+                            <button class="quick-view"><i class="fas fa-eye"></i></button>
+                            <button class="add-to-cart"><i class="fas fa-shopping-cart"></i></button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <h3>BRK Pro</h3>
+                        <p class="product-description">Professional athletic shoe for serious performance</p>
+                        <div class="product-bottom">
+                            <p class="product-price"><span class="original-price">$179.99</span> $159.99</p>
+                            <div class="product-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <span>(32)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="product-card" data-product-id="product-4">
+                    <div class="product-image">
+                        <img src="images/products/product4.jpg" alt="BRK Casual">
+                        <div class="product-actions">
+                            <button class="like-button"><i class="far fa-heart"></i></button>
+                            <button class="quick-view"><i class="fas fa-eye"></i></button>
+                            <button class="add-to-cart"><i class="fas fa-shopping-cart"></i></button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <h3>BRK Casual</h3>
+                        <p class="product-description">Comfortable slip-on for relaxed weekends</p>
+                        <div class="product-bottom">
+                            <p class="product-price">$79.99</p>
+                            <div class="product-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="far fa-star"></i>
+                                <i class="far fa-star"></i>
+                                <span>(12)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="product-card" data-product-id="product-5">
+                    <div class="product-image">
+                        <img src="images/products/product5.jpg" alt="BRK Air">
+                        <div class="product-actions">
+                            <button class="like-button"><i class="far fa-heart"></i></button>
+                            <button class="quick-view"><i class="fas fa-eye"></i></button>
+                            <button class="add-to-cart"><i class="fas fa-shopping-cart"></i></button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <h3>BRK Air</h3>
+                        <p class="product-description">Lightweight mesh design for maximum breathability</p>
+                        <div class="product-bottom">
+                            <p class="product-price">$119.99</p>
+                            <div class="product-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="far fa-star"></i>
+                                <span>(16)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="product-card" data-product-id="product-6">
+                    <div class="product-image">
+                        <img src="images/products/product6.jpg" alt="BRK Trail">
+                        <div class="product-tag bestseller">Best Seller</div>
+                        <div class="product-actions">
+                            <button class="like-button"><i class="far fa-heart"></i></button>
+                            <button class="quick-view"><i class="fas fa-eye"></i></button>
+                            <button class="add-to-cart"><i class="fas fa-shopping-cart"></i></button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <h3>BRK Trail</h3>
+                        <p class="product-description">Rugged outdoor shoe with superior traction</p>
+                        <div class="product-bottom">
+                            <p class="product-price">$149.99</p>
+                            <div class="product-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                                <span>(28)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="product-card" data-product-id="product-7">
+                    <div class="product-image">
+                        <img src="images/products/product7.jpg" alt="BRK Canvas">
+                        <div class="product-actions">
+                            <button class="like-button"><i class="far fa-heart"></i></button>
+                            <button class="quick-view"><i class="fas fa-eye"></i></button>
+                            <button class="add-to-cart"><i class="fas fa-shopping-cart"></i></button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <h3>BRK Canvas</h3>
+                        <p class="product-description">Classic canvas sneaker in various colors</p>
+                        <div class="product-bottom">
+                            <p class="product-price">$59.99</p>
+                            <div class="product-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="far fa-star"></i>
+                                <span>(20)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="product-card" data-product-id="product-8">
+                    <div class="product-image">
+                        <img src="images/products/product8.jpg" alt="BRK Flex">
+                        <div class="product-actions">
+                            <button class="like-button"><i class="far fa-heart"></i></button>
+                            <button class="quick-view"><i class="fas fa-eye"></i></button>
+                            <button class="add-to-cart"><i class="fas fa-shopping-cart"></i></button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <h3>BRK Flex</h3>
+                        <p class="product-description">Ultra-flexible training shoe for gym sessions</p>
+                        <div class="product-bottom">
+                            <p class="product-price">$109.99</p>
+                            <div class="product-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                                <i class="far fa-star"></i>
+                                <span>(15)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Pagination -->
+            <div class="pagination">
+                <a href="#" class="active">1</a>
+                <a href="#">2</a>
+                <a href="#">3</a>
+                <a href="#">4</a>
+                <span>...</span>
+                <a href="#">10</a>
+                <a href="#" class="next">Next <i class="fas fa-chevron-right"></i></a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick View Modal -->
+    <div class="modal" id="quick-view-modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div class="product-quick-view">
+                <div class="quick-view-left">
+                    <img src="images/products/product1.jpg" alt="Product" id="modal-product-image">
+                    <div class="thumbnail-images">
+                        <img src="images/products/product1-thumb1.jpg" alt="Thumbnail 1" class="thumbnail active">
+                        <img src="images/products/product1-thumb2.jpg" alt="Thumbnail 2" class="thumbnail">
+                        <img src="images/products/product1-thumb3.jpg" alt="Thumbnail 3" class="thumbnail">
+                    </div>
+                </div>
+                <div class="quick-view-right">
+                    <h2 id="modal-product-name">BRK Runner</h2>
+                    <div class="modal-rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star-half-alt"></i>
+                        <span>(24 reviews)</span>
+                    </div>
+                    <p class="modal-price" id="modal-product-price">$129.99</p>
+                    <p class="modal-description" id="modal-product-description">Lightweight running shoe with responsive cushioning for maximum comfort on long runs. Features breathable mesh upper and durable rubber outsole.</p>
+                    
+                    <div class="modal-options">
+                        <div class="size-options">
+                            <h4>Size:</h4>
+                            <div class="sizes">
+                                <button class="size-btn">7</button>
+                                <button class="size-btn">7.5</button>
+                                <button class="size-btn active">8</button>
+                                <button class="size-btn">8.5</button>
+                                <button class="size-btn">9</button>
+                                <button class="size-btn">9.5</button>
+                                <button class="size-btn">10</button>
+                                <button class="size-btn">10.5</button>
+                                <button class="size-btn">11</button>
+                            </div>
+                        </div>
+                        
+                        <div class="color-options">
+                            <h4>Color:</h4>
+                            <div class="colors">
+                                <button class="color-btn active" style="background-color: #3498db;"></button>
+                                <button class="color-btn" style="background-color: #e74c3c;"></button>
+                                <button class="color-btn" style="background-color: #2ecc71;"></button>
+                                <button class="color-btn" style="background-color: #f1c40f;"></button>
+                                <button class="color-btn" style="background-color: #9b59b6;"></button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="modal-actions">
+                        <div class="quantity-selector">
+                            <button class="quantity-btn minus">-</button>
+                            <input type="number" value="1" min="1" max="10" id="quantity">
+                            <button class="quantity-btn plus">+</button>
+                        </div>
+                        <button class="add-to-cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+                        <button class="wishlist-btn"><i class="far fa-heart"></i></button>
+                    </div>
+                    
+                    <div class="product-meta">
+                        <p><strong>SKU:</strong> <span id="modal-sku">BRK-RN-001</span></p>
+                        <p><strong>Category:</strong> <span id="modal-category">Running Shoes</span></p>
+                        <p><strong>Tags:</strong> <span id="modal-tags">sports, running, cushioning</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <div class="logo footer-logo">
+                        <img src="images/logo.svg" alt="BRK Sneakers Logo">
+                        <span>BRK Sneakers</span>
+                    </div>
+                    <p>Step into comfort and style with BRK Sneakers - your ultimate destination for quality footwear.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-pinterest"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Shop</h3>
+                    <ul>
+                        <li><a href="#">Men's Collection</a></li>
+                        <li><a href="#">Women's Collection</a></li>
+                        <li><a href="#">Kids' Collection</a></li>
+                        <li><a href="#">New Arrivals</a></li>
+                        <li><a href="#">Sale Items</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Support</h3>
+                    <ul>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">FAQs</a></li>
+                        <li><a href="#">Shipping & Returns</a></li>
+                        <li><a href="#">Size Guide</a></li>
+                        <li><a href="#">Track Order</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Company</h3>
+                    <ul>
+                        <li><a href="#">About BRK</a></li>
+                        <li><a href="#">Our Stores</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Terms & Conditions</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 BRK Sneakers. All rights reserved. Created by Your Team Names</p>
+                <div class="payment-methods">
+                    <i class="fab fa-cc-visa"></i>
+                    <i class="fab fa-cc-mastercard"></i>
+                    <i class="fab fa-cc-amex"></i>
+                    <i class="fab fa-cc-paypal"></i>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Include JavaScript files -->
+    <script src="js/api-connector.js"></script>
+    <script src="js/products.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
