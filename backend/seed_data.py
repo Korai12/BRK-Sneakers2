@@ -1,239 +1,516 @@
 from pymongo import MongoClient
-import random
 
-# Connect to MongoDB
 client = MongoClient('mongodb://localhost:27017/')
 db = client['brk_sneakers']
 products_collection = db['products']
 
-# Clear existing products
+# Clear previous data
 products_collection.delete_many({})
 
-# Sample product data
 products = [
     {
         "name": "BRK Runner",
-        "description": "Lightweight running shoe with responsive cushioning for maximum comfort on long runs.",
+        "description": "Flagship running shoe designed for comfort and speed.",
+        "details": (
+            "Breathable mesh upper, responsive foam midsole, 8mm drop for natural movement. "
+            "Durable rubber outsole for excellent grip on all surfaces. Ideal for daily runs and races."
+        ),
+        "features": [
+            "Mesh upper for maximum airflow",
+            "Lightweight design (270g EUR 43)",
+            "Responsive cushioning",
+            "8mm heel-to-toe drop",
+            "High-grip rubber outsole"
+        ],
+        "specs": {
+            "Material": "Synthetic mesh upper, rubber outsole",
+            "Weight": "270g (EUR 43)",
+            "Drop": "8mm",
+            "Cushioning": "Responsive foam"
+        },
         "category": "sports",
-        "price": 129.99,
+        "price": 119.99,
+        "currency": "EUR",
         "image": "product1.jpg",
-        "likes": random.randint(10, 50),
-        "colors": ["blue", "red", "black"],
-        "sizes": [7, 7.5, 8, 8.5, 9, 9.5, 10, 10.5, 11],
+        "photos": ["product1.jpg", "product1-2.jpg", "product1-3.jpg"],
+        "likes": 0,
+        "sizes": [39, 40, 41, 42, 43, 44, 45],
         "tags": ["running", "cushioning", "lightweight"]
     },
     {
         "name": "BRK Urban",
-        "description": "Street-style sneaker for everyday comfort and fashion-forward looks.",
+        "description": "Street-style sneaker for everyday comfort and style.",
+        "details": (
+            "Premium canvas upper, classic rubber sole, padded collar. "
+            "Perfect for city walks and casual outings."
+        ),
+        "features": [
+            "Durable canvas",
+            "Flexible rubber sole",
+            "Padded collar",
+            "Timeless design"
+        ],
+        "specs": {
+            "Material": "Canvas, rubber",
+            "Weight": "320g (EUR 42)",
+            "Cushioning": "Foam insole"
+        },
         "category": "casual",
-        "price": 99.99,
+        "price": 84.90,
+        "currency": "EUR",
         "image": "product2.jpg",
-        "likes": random.randint(10, 50),
-        "colors": ["white", "gray", "black"],
-        "sizes": [7, 7.5, 8, 8.5, 9, 9.5, 10, 10.5, 11],
+        "photos": ["product2.jpg", "product2-2.jpg"],
+        "likes": 0,
+        "sizes": [38, 39, 40, 41, 42, 43, 44],
         "tags": ["street", "fashion", "everyday"]
     },
     {
         "name": "BRK Pro",
-        "description": "Professional athletic shoe for serious performance and endurance training.",
+        "description": "Performance athletic shoe for serious training.",
+        "details": (
+            "Engineered mesh, stabilizing overlays, high-rebound midsole foam. "
+            "Ideal for interval and tempo workouts."
+        ),
+        "features": [
+            "Lightweight support",
+            "High energy return",
+            "Stabilizing overlays",
+            "Designed for high intensity"
+        ],
+        "specs": {
+            "Material": "Mesh, TPU, rubber",
+            "Weight": "255g (EUR 44)",
+            "Drop": "6mm",
+            "Support": "Medium"
+        },
         "category": "sports",
-        "price": 159.99,
+        "price": 139.00,
+        "currency": "EUR",
         "image": "product3.jpg",
-        "likes": random.randint(10, 50),
-        "colors": ["blue", "green", "black"],
-        "sizes": [7, 7.5, 8, 8.5, 9, 9.5, 10, 10.5, 11],
+        "photos": ["product3.jpg", "product3-2.jpg", "product3-3.jpg"],
+        "likes": 0,
+        "sizes": [40, 41, 42, 43, 44, 45],
         "tags": ["professional", "training", "performance"]
     },
     {
         "name": "BRK Casual",
-        "description": "Comfortable slip-on for relaxed weekends and casual outings.",
+        "description": "Slip-on shoe for relaxed weekends and casual style.",
+        "details": (
+            "Soft textile upper, elastic side panels, ultra-flexible sole. "
+            "Easy on, easy off—great for any relaxed day."
+        ),
+        "features": [
+            "Slip-on comfort",
+            "Flexible outsole",
+            "Low-weight (210g EUR 41)",
+            "Weekend ready"
+        ],
+        "specs": {
+            "Material": "Textile, synthetic sole",
+            "Weight": "210g (EUR 41)",
+            "Closure": "Slip-on"
+        },
         "category": "casual",
-        "price": 79.99,
+        "price": 59.90,
+        "currency": "EUR",
         "image": "product4.jpg",
-        "likes": random.randint(10, 50),
-        "colors": ["brown", "navy", "black"],
-        "sizes": [7, 7.5, 8, 8.5, 9, 9.5, 10, 10.5, 11],
+        "photos": ["product4.jpg", "product4-2.jpg"],
+        "likes": 0,
+        "sizes": [38, 39, 40, 41, 42],
         "tags": ["slip-on", "comfort", "weekend"]
     },
     {
         "name": "BRK Air",
-        "description": "Lightweight mesh design for maximum breathability in hot weather.",
+        "description": "Ultra-breathable sneaker for hot weather and summer adventures.",
+        "details": (
+            "Lightweight mesh upper, featherweight EVA sole, available in cool summer colors. "
+            "Perfect for travel and long walks."
+        ),
+        "features": [
+            "Air mesh for ventilation",
+            "Featherweight design",
+            "Summer style colors"
+        ],
+        "specs": {
+            "Material": "Mesh, EVA",
+            "Weight": "215g (EUR 42)",
+            "Cushioning": "Basic"
+        },
         "category": "sneakers",
-        "price": 119.99,
+        "price": 72.50,
+        "currency": "EUR",
         "image": "product5.jpg",
-        "likes": random.randint(10, 50),
-        "colors": ["blue", "white", "gray"],
-        "sizes": [7, 7.5, 8, 8.5, 9, 9.5, 10, 10.5, 11],
+        "photos": ["product5.jpg", "product5-2.jpg"],
+        "likes": 0,
+        "sizes": [39, 40, 41, 42, 43],
         "tags": ["breathable", "lightweight", "summer"]
     },
     {
         "name": "BRK Trail",
-        "description": "Rugged outdoor shoe with superior traction for hiking and trail running.",
+        "description": "Outdoor shoe with rugged sole for hiking and trail running.",
+        "details": (
+            "Reinforced toe cap, aggressive outsole lugs, waterproof upper. "
+            "Provides secure footing even in rough terrain."
+        ),
+        "features": [
+            "Aggressive grip outsole",
+            "Waterproof upper",
+            "Rugged design",
+            "Toe protection"
+        ],
+        "specs": {
+            "Material": "Synthetic, rubber",
+            "Weight": "330g (EUR 44)",
+            "Waterproof": "Yes"
+        },
         "category": "sports",
-        "price": 149.99,
+        "price": 109.00,
+        "currency": "EUR",
         "image": "product6.jpg",
-        "likes": random.randint(10, 50),
-        "colors": ["green", "brown", "gray"],
-        "sizes": [7, 7.5, 8, 8.5, 9, 9.5, 10, 10.5, 11],
+        "photos": ["product6.jpg"],
+        "likes": 0,
+        "sizes": [41, 42, 43, 44, 45],
         "tags": ["hiking", "trail", "outdoor"]
     },
     {
         "name": "BRK Canvas",
-        "description": "Classic canvas sneaker available in various colors for versatile styling.",
+        "description": "Classic canvas sneaker in versatile colors.",
+        "details": (
+            "Canvas upper, vulcanized rubber sole, classic lace-up style. "
+            "Ideal for everyday use."
+        ),
+        "features": [
+            "Canvas upper",
+            "Vulcanized sole",
+            "Multiple color options"
+        ],
+        "specs": {
+            "Material": "Canvas, rubber",
+            "Weight": "280g (EUR 42)"
+        },
         "category": "casual",
-        "price": 59.99,
+        "price": 44.99,
+        "currency": "EUR",
         "image": "product7.jpg",
-        "likes": random.randint(10, 50),
-        "colors": ["red", "blue", "black", "white"],
-        "sizes": [7, 7.5, 8, 8.5, 9, 9.5, 10, 10.5, 11],
+        "photos": ["product7.jpg"],
+        "likes": 0,
+        "sizes": [38, 39, 40, 41, 42, 43],
         "tags": ["canvas", "classic", "colorful"]
     },
     {
         "name": "BRK Flex",
-        "description": "Ultra-flexible training shoe for gym sessions and cross-training.",
+        "description": "Ultra-flexible training shoe for gym and cross-training.",
+        "details": (
+            "Stretch-knit upper, grippy sole, sock-like fit. "
+            "Perfect for dynamic movement."
+        ),
+        "features": [
+            "Stretch-knit upper",
+            "Flexible sole",
+            "Gym ready"
+        ],
+        "specs": {
+            "Material": "Knit, rubber",
+            "Weight": "235g (EUR 42)"
+        },
         "category": "sports",
-        "price": 109.99,
+        "price": 97.00,
+        "currency": "EUR",
         "image": "product8.jpg",
-        "likes": random.randint(10, 50),
-        "colors": ["black", "gray", "blue"],
-        "sizes": [7, 7.5, 8, 8.5, 9, 9.5, 10, 10.5, 11],
+        "photos": ["product8.jpg", "product8-2.jpg"],
+        "likes": 0,
+        "sizes": [39, 40, 41, 42, 43, 44],
         "tags": ["training", "flexible", "gym"]
     },
     {
         "name": "BRK Elite",
-        "description": "Premium performance shoe with advanced cushioning and support.",
+        "description": "Premium running shoe with advanced support and cushioning.",
+        "details": (
+            "Reinforced heel, multi-layer midsole, shock absorption for high-mileage runners."
+        ),
+        "features": [
+            "Reinforced heel",
+            "Advanced cushioning",
+            "Supportive midsole"
+        ],
+        "specs": {
+            "Material": "Synthetic, rubber",
+            "Weight": "310g (EUR 44)"
+        },
         "category": "sports",
-        "price": 179.99,
+        "price": 169.99,
+        "currency": "EUR",
         "image": "product9.jpg",
-        "likes": random.randint(10, 50),
-        "colors": ["black", "silver", "gold"],
-        "sizes": [7, 7.5, 8, 8.5, 9, 9.5, 10, 10.5, 11],
+        "photos": ["product9.jpg"],
+        "likes": 0,
+        "sizes": [41, 42, 43, 44, 45],
         "tags": ["premium", "cushioning", "support"]
     },
     {
         "name": "BRK Lite",
         "description": "Super lightweight shoe for speed training and race day.",
+        "details": (
+            "Ultra-light mesh upper, race-tuned sole, minimalist support for fast runs."
+        ),
+        "features": [
+            "Ultra-light mesh",
+            "Minimalist support",
+            "Speed tuned"
+        ],
+        "specs": {
+            "Material": "Mesh, synthetic sole",
+            "Weight": "195g (EUR 42)"
+        },
         "category": "sports",
-        "price": 139.99,
+        "price": 112.00,
+        "currency": "EUR",
         "image": "product10.jpg",
-        "likes": random.randint(10, 50),
-        "colors": ["yellow", "blue", "black"],
-        "sizes": [7, 7.5, 8, 8.5, 9, 9.5, 10, 10.5, 11],
+        "photos": ["product10.jpg"],
+        "likes": 0,
+        "sizes": [40, 41, 42, 43, 44],
         "tags": ["lightweight", "racing", "speed"]
     },
     {
         "name": "BRK Retro",
-        "description": "Vintage-inspired sneaker with modern comfort technology.",
+        "description": "Vintage-inspired sneaker with modern comfort.",
+        "details": (
+            "Classic suede and nylon mix, foam cushioning, old-school design."
+        ),
+        "features": [
+            "Retro look",
+            "Foam midsole",
+            "Modern comfort"
+        ],
+        "specs": {
+            "Material": "Suede, nylon, rubber",
+            "Weight": "290g (EUR 42)"
+        },
         "category": "sneakers",
-        "price": 99.99,
+        "price": 89.00,
+        "currency": "EUR",
         "image": "product11.jpg",
-        "likes": random.randint(10, 50),
-        "colors": ["white", "red", "blue"],
-        "sizes": [7, 7.5, 8, 8.5, 9, 9.5, 10, 10.5, 11],
+        "photos": ["product11.jpg", "product11-2.jpg"],
+        "likes": 0,
+        "sizes": [39, 40, 41, 42, 43],
         "tags": ["retro", "vintage", "classic"]
     },
     {
         "name": "BRK Slip",
-        "description": "Easy slip-on shoe for effortless style and comfort.",
+        "description": "Easy slip-on for effortless daily style and comfort.",
+        "details": (
+            "Elastic side gores, breathable lining, low-profile sole."
+        ),
+        "features": [
+            "Slip-on entry",
+            "Breathable lining",
+            "Lightweight"
+        ],
+        "specs": {
+            "Material": "Textile, rubber",
+            "Weight": "205g (EUR 41)"
+        },
         "category": "casual",
-        "price": 69.99,
+        "price": 42.90,
+        "currency": "EUR",
         "image": "product12.jpg",
-        "likes": random.randint(10, 50),
-        "colors": ["black", "white", "gray"],
-        "sizes": [7, 7.5, 8, 8.5, 9, 9.5, 10, 10.5, 11],
+        "photos": ["product12.jpg"],
+        "likes": 0,
+        "sizes": [38, 39, 40, 41, 42, 43],
         "tags": ["slip-on", "easy", "comfort"]
     },
     {
         "name": "BRK Hike",
-        "description": "Waterproof hiking boot for all-terrain adventures.",
+        "description": "Waterproof hiking boot for adventurous trails.",
+        "details": (
+            "Waterproof construction, deep-lug sole, padded ankle support."
+        ),
+        "features": [
+            "Waterproof membrane",
+            "Deep-lug outsole",
+            "Ankle support"
+        ],
+        "specs": {
+            "Material": "Leather, synthetic, rubber",
+            "Weight": "420g (EUR 44)"
+        },
         "category": "sports",
-        "price": 169.99,
+        "price": 144.00,
+        "currency": "EUR",
         "image": "product13.jpg",
-        "likes": random.randint(10, 50),
-        "colors": ["brown", "green", "black"],
-        "sizes": [7, 7.5, 8, 8.5, 9, 9.5, 10, 10.5, 11],
+        "photos": ["product13.jpg", "product13-2.jpg"],
+        "likes": 0,
+        "sizes": [40, 41, 42, 43, 44, 45],
         "tags": ["hiking", "waterproof", "boot"]
     },
     {
         "name": "BRK Glide",
         "description": "Smooth, cushioned shoe for long-distance running comfort.",
+        "details": (
+            "Seamless mesh upper, plush foam, 10mm drop for endurance runners."
+        ),
+        "features": [
+            "Plush foam",
+            "10mm drop",
+            "Smooth ride"
+        ],
+        "specs": {
+            "Material": "Mesh, synthetic sole",
+            "Weight": "265g (EUR 43)"
+        },
         "category": "sports",
-        "price": 134.99,
+        "price": 98.00,
+        "currency": "EUR",
         "image": "product14.jpg",
-        "likes": random.randint(10, 50),
-        "colors": ["blue", "orange", "black"],
-        "sizes": [7, 7.5, 8, 8.5, 9, 9.5, 10, 10.5, 11],
+        "photos": ["product14.jpg"],
+        "likes": 0,
+        "sizes": [40, 41, 42, 43, 44],
         "tags": ["running", "cushioned", "long-distance"]
     },
     {
         "name": "BRK Swift",
-        "description": "Responsive and lightweight shoe designed for speed and agility.",
+        "description": "Responsive lightweight shoe for speed and agility.",
+        "details": (
+            "Mesh upper, EVA midsole, flexible forefoot for dynamic moves."
+        ),
+        "features": [
+            "Flexible forefoot",
+            "Agile design",
+            "Lightweight"
+        ],
+        "specs": {
+            "Material": "Mesh, EVA",
+            "Weight": "220g (EUR 42)"
+        },
         "category": "sports",
-        "price": 124.99,
+        "price": 99.00,
+        "currency": "EUR",
         "image": "product15.jpg",
-        "likes": random.randint(10, 50),
-        "colors": ["red", "black", "white"],
-        "sizes": [7, 7.5, 8, 8.5, 9, 9.5, 10, 10.5, 11],
+        "photos": ["product15.jpg"],
+        "likes": 0,
+        "sizes": [39, 40, 41, 42, 43, 44],
         "tags": ["speed", "agility", "lightweight"]
     },
     {
         "name": "BRK Women's Active",
-        "description": "Performance shoe designed specifically for women's feet.",
+        "description": "Performance shoe designed for women’s feet and style.",
+        "details": (
+            "Contoured last, lightweight mesh, extra arch support."
+        ),
+        "features": [
+            "Women's specific fit",
+            "Lightweight mesh",
+            "Extra arch support"
+        ],
+        "specs": {
+            "Material": "Mesh, synthetic sole",
+            "Weight": "195g (EUR 39)"
+        },
         "category": "women",
-        "price": 119.99,
+        "price": 109.90,
+        "currency": "EUR",
         "image": "product16.jpg",
-        "likes": random.randint(10, 50),
-        "colors": ["pink", "purple", "white"],
-        "sizes": [5, 5.5, 6, 6.5, 7, 7.5, 8, 8.5, 9],
+        "photos": ["product16.jpg"],
+        "likes": 0,
+        "sizes": [36, 37, 38, 39, 40, 41],
         "tags": ["women", "active", "performance"]
     },
     {
         "name": "BRK Kids Sport",
-        "description": "Durable and comfortable sports shoe for active kids.",
+        "description": "Durable sports shoe for active kids.",
+        "details": (
+            "Reinforced toe, non-marking sole, fun colors. Made for school and play."
+        ),
+        "features": [
+            "Reinforced toe",
+            "Non-marking sole",
+            "Fun colors"
+        ],
+        "specs": {
+            "Material": "Synthetic, rubber",
+            "Weight": "160g (EUR 35)"
+        },
         "category": "kids",
-        "price": 69.99,
+        "price": 47.90,
+        "currency": "EUR",
         "image": "product17.jpg",
-        "likes": random.randint(10, 50),
-        "colors": ["blue", "red", "green"],
-        "sizes": [3, 3.5, 4, 4.5, 5, 5.5, 6],
+        "photos": ["product17.jpg"],
+        "likes": 0,
+        "sizes": [31, 32, 33, 34, 35, 36, 37],
         "tags": ["kids", "sport", "durable"]
     },
     {
         "name": "BRK Boost",
-        "description": "Energy-returning cushioning for a responsive and bouncy feel.",
+        "description": "Energy-return cushioning for a responsive, bouncy feel.",
+        "details": (
+            "Springy midsole, impact-absorbing heel, modern styling."
+        ),
+        "features": [
+            "Springy midsole",
+            "Impact absorbing",
+            "Modern style"
+        ],
+        "specs": {
+            "Material": "Mesh, synthetic sole",
+            "Weight": "250g (EUR 43)"
+        },
         "category": "sports",
-        "price": 149.99,
+        "price": 112.90,
+        "currency": "EUR",
         "image": "product18.jpg",
-        "likes": random.randint(10, 50),
-        "colors": ["black", "orange", "blue"],
-        "sizes": [7, 7.5, 8, 8.5, 9, 9.5, 10, 10.5, 11],
+        "photos": ["product18.jpg"],
+        "likes": 0,
+        "sizes": [39, 40, 41, 42, 43, 44, 45],
         "tags": ["cushioning", "energy", "responsive"]
     },
     {
         "name": "BRK Women's Casual",
-        "description": "Stylish and comfortable everyday shoe for women.",
+        "description": "Stylish everyday shoe for women, easy to match with any outfit.",
+        "details": (
+            "Soft upper, feminine design, versatile color options."
+        ),
+        "features": [
+            "Feminine design",
+            "Soft upper",
+            "All-day comfort"
+        ],
+        "specs": {
+            "Material": "Synthetic, textile",
+            "Weight": "170g (EUR 38)"
+        },
         "category": "women",
-        "price": 89.99,
+        "price": 58.50,
+        "currency": "EUR",
         "image": "product19.jpg",
-        "likes": random.randint(10, 50),
-        "colors": ["white", "beige", "black"],
-        "sizes": [5, 5.5, 6, 6.5, 7, 7.5, 8, 8.5, 9],
+        "photos": ["product19.jpg"],
+        "likes": 0,
+        "sizes": [36, 37, 38, 39, 40, 41],
         "tags": ["women", "casual", "everyday"]
     },
     {
         "name": "BRK Kids Casual",
-        "description": "Fun and comfortable shoes for everyday wear for children.",
+        "description": "Comfortable, fun shoes for kids' everyday wear.",
+        "details": (
+            "Colorful uppers, easy Velcro closure, cushioned insole."
+        ),
+        "features": [
+            "Colorful design",
+            "Velcro closure",
+            "Cushioned insole"
+        ],
+        "specs": {
+            "Material": "Synthetic, textile",
+            "Weight": "145g (EUR 34)"
+        },
         "category": "kids",
-        "price": 59.99,
+        "price": 39.99,
+        "currency": "EUR",
         "image": "product20.jpg",
-        "likes": random.randint(10, 50),
-        "colors": ["blue", "pink", "green"],
-        "sizes": [3, 3.5, 4, 4.5, 5, 5.5, 6],
+        "photos": ["product20.jpg"],
+        "likes": 0,
+        "sizes": [29, 30, 31, 32, 33, 34, 35],
         "tags": ["kids", "casual", "comfortable"]
     }
 ]
 
-# Insert products into the database
 products_collection.insert_many(products)
-
-print(f"Database seeded with {len(products)} products.")
+print(f"Database seeded with {len(products)} products (with unique details and EUR sizes).")

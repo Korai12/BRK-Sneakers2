@@ -28,7 +28,7 @@
                     <li><a href="#">Sale</a></li>
                 </ul>
             </nav>
-            <div class="header-actions">
+           <div class="header-actions">
                 <a href="#" class="search-icon"><i class="fas fa-search"></i></a>
                 <a href="#" class="cart-icon"><i class="fas fa-shopping-cart"></i><span class="cart-count">0</span></a>
                 <a href="#" class="user-icon"><i class="fas fa-user"></i></a>
@@ -322,75 +322,17 @@
         </div>
     </section>
 
-    <!-- Quick View Modal -->
+    <!-- Quick View Modal (for product image view) -->
     <div class="modal" id="quick-view-modal">
         <div class="modal-content">
             <span class="close-modal">&times;</span>
             <div class="product-quick-view">
                 <div class="quick-view-left">
                     <img src="images/products/product1.jpg" alt="Product" id="modal-product-image">
-                    <div class="thumbnail-images">
-                        <img src="images/products/product1-thumb1.jpg" alt="Thumbnail 1" class="thumbnail active">
-                        <img src="images/products/product1-thumb2.jpg" alt="Thumbnail 2" class="thumbnail">
-                        <img src="images/products/product1-thumb3.jpg" alt="Thumbnail 3" class="thumbnail">
-                    </div>
                 </div>
                 <div class="quick-view-right">
                     <h2 id="modal-product-name">BRK Runner</h2>
-                    <div class="modal-rating">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star-half-alt"></i>
-                        <span>(24 reviews)</span>
-                    </div>
-                    <p class="modal-price" id="modal-product-price">$129.99</p>
-                    <p class="modal-description" id="modal-product-description">Lightweight running shoe with responsive cushioning for maximum comfort on long runs. Features breathable mesh upper and durable rubber outsole.</p>
-                    
-                    <div class="modal-options">
-                        <div class="size-options">
-                            <h4>Size:</h4>
-                            <div class="sizes">
-                                <button class="size-btn">7</button>
-                                <button class="size-btn">7.5</button>
-                                <button class="size-btn active">8</button>
-                                <button class="size-btn">8.5</button>
-                                <button class="size-btn">9</button>
-                                <button class="size-btn">9.5</button>
-                                <button class="size-btn">10</button>
-                                <button class="size-btn">10.5</button>
-                                <button class="size-btn">11</button>
-                            </div>
-                        </div>
-                        
-                        <div class="color-options">
-                            <h4>Color:</h4>
-                            <div class="colors">
-                                <button class="color-btn active" style="background-color: #3498db;"></button>
-                                <button class="color-btn" style="background-color: #e74c3c;"></button>
-                                <button class="color-btn" style="background-color: #2ecc71;"></button>
-                                <button class="color-btn" style="background-color: #f1c40f;"></button>
-                                <button class="color-btn" style="background-color: #9b59b6;"></button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="modal-actions">
-                        <div class="quantity-selector">
-                            <button class="quantity-btn minus">-</button>
-                            <input type="number" value="1" min="1" max="10" id="quantity">
-                            <button class="quantity-btn plus">+</button>
-                        </div>
-                        <button class="add-to-cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
-                        <button class="wishlist-btn"><i class="far fa-heart"></i></button>
-                    </div>
-                    
-                    <div class="product-meta">
-                        <p><strong>SKU:</strong> <span id="modal-sku">BRK-RN-001</span></p>
-                        <p><strong>Category:</strong> <span id="modal-category">Running Shoes</span></p>
-                        <p><strong>Tags:</strong> <span id="modal-tags">sports, running, cushioning</span></p>
-                    </div>
+                    <a href="#" id="view-full-details" class="cta-button">View Full Details</a>
                 </div>
             </div>
         </div>
@@ -464,5 +406,36 @@
     <script src="js/api-connector.js"></script>
     <script src="js/products.js"></script>
     <script src="js/main.js"></script>
+    <script src="js/header-search.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/profile.js"></script>
+    <script src="js/mobile-menu.js"></script>
+    
+    <!-- JavaScript to update the existing quick view modal -->
+    <script>
+    // Update quick view modal functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        const quickViewModal = document.getElementById('quick-view-modal');
+        
+        // If quick view modal exists
+        if (quickViewModal) {
+            // Get view full details button
+            const viewDetailsBtn = document.getElementById('view-full-details');
+            
+            // Add click event to view full details button
+            if (viewDetailsBtn) {
+                viewDetailsBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Get product ID from modal
+                    const productId = quickViewModal.getAttribute('data-product-id') || 'product-1';
+                    
+                    // Navigate to product detail page
+                    window.location.href = `product-detail.html?product_id=${productId}`;
+                });
+            }
+        }
+    });
+    </script>
 </body>
 </html>
