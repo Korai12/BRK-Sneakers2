@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - BRK Sneakers</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/profile.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+                <a href="index.html">
+                    <img src="images/logo.svg" alt="BRK Sneakers Logo">
+                    <span>BRK Sneakers</span>
+                </a>
+            </div>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="products.html">Products</a></li>
+                    <li><a href="products.html?category=men">Men</a></li>
+                    <li><a href="products.html?category=women">Women</a></li>
+                    <li><a href="products.html?category=kids">Kids</a></li>
+                </ul>
+            </nav>
+            <div class="header-actions">
+                <a href="#" class="search-icon"><i class="fas fa-search"></i></a>
+                <a href="#" class="cart-icon"><i class="fas fa-shopping-cart"></i><span class="cart-count">0</span></a>
+                <a href="profile.html" class="user-icon active"><i class="fas fa-user"></i></a>
+                <div class="mobile-menu-button">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Profile Banner -->
+    <section class="profile-banner">
+        <div class="container">
+            <h1>My Account</h1>
+            <p>Manage your profile, orders, and wishlist</p>
+        </div>
+    </section>
+
+    <!-- Login Required Message (shown when not logged in) -->
+    <div class="login-required container" id="login-required">
+        <div class="login-message">
+            <i class="fas fa-user-lock"></i>
+            <h2>Login Required</h2>
+            <p>Please log in or create an account to access your profile.</p>
+            <div class="auth-buttons">
+              <button class="login-btn" id="show-login">Log In</button>
+              <button class="signup-btn" id="show-signup">Sign Up</button>
+             </div>
+        </div>
+    </div>
+
+    <!-- Profile Content (shown when logged in) -->
+    <section class="profile-section container" id="profile-content">
+        <div class="profile-sidebar">
+            <div class="user-info">
+                <div class="user-avatar">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <h3 id="user-display-name">John Doe</h3>
+                <p id="user-email">john.doe@example.com</p>
+            </div>
+            <ul class="profile-nav">
+                <li><a href="#" class="active" data-tab="account-details"><i class="fas fa-user"></i> Account Details</a></li>
+                <li><a href="#" data-tab="orders"><i class="fas fa-shopping-bag"></i> My Orders</a></li>
+                <li><a href="#" data-tab="liked-products"><i class="fas fa-thumbs-up"></i> Liked Products</a></li>
+                <li><a href="#" data-tab="wishlist"><i class="fas fa-heart"></i> Wishlist</a></li>
+                <li><a href="#" id="logout-button"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </div>
+        
+        <div class="profile-content">
+            <!-- Account Details Tab -->
+            <div class="profile-tab active" id="account-details">
+                <h2>Account Details</h2>
+                <form id="account-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="first-name">First Name</label>
+                            <input type="text" id="first-name" name="first-name">
+                        </div>
+                        <div class="form-group">
+                            <label for="last-name">Last Name</label>
+                            <input type="text" id="last-name" name="last-name">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="profile-email">Email Address</label>
+                        <input type="email" id="profile-email" name="email" disabled>
+                    </div>
+                    <h3>Password Change</h3>
+                    <div class="form-group">
+                        <label for="current-password">Current Password</label>
+                        <input type="password" id="current-password" name="current-password">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="new-password">New Password</label>
+                            <input type="password" id="new-password" name="new-password">
+                        </div>
+                        <div class="form-group">
+                            <label for="confirm-password">Confirm New Password</label>
+                            <input type="password" id="confirm-password" name="confirm-password">
+                        </div>
+                    </div>
+                    <button type="submit" class="save-btn">Save Changes</button>
+                </form>
+            </div>
+            
+            <!-- Orders Tab -->
+            <div class="profile-tab" id="orders">
+                <h2>My Orders</h2>
+                <div id="orders-container">
+                    <div class="no-orders">
+                        <i class="fas fa-shopping-bag"></i>
+                        <p>You haven't placed any orders yet.</p>
+                        <a href="products.html" class="cta-button">Start Shopping</a>
+                    </div>
+                    <!-- Orders will be added here dynamically -->
+                </div>
+            </div>
+            
+            <!-- Liked Products Tab -->
+<div class="profile-tab" id="liked-products">
+    <h2>Products You've Liked</h2>
+    <div id="liked-products-container" class="products-grid">
+        <div class="no-liked-products">
+            <i class="fas fa-thumbs-up"></i>
+            <p>You haven't liked any products yet.</p>
+            <a href="products.html" class="cta-button">Explore Products</a>
+        </div>
+        <!-- Liked products will be added here dynamically -->
+    </div>
+</div>
+
+            
+            <!-- Wishlist Tab -->
+            <div class="profile-tab" id="wishlist">
+                <h2>My Wishlist</h2>
+                <div id="wishlist-container" class="products-grid">
+                    <div class="no-wishlist">
+                        <i class="fas fa-heart"></i>
+                        <p>Your wishlist is empty.</p>
+                        <a href="products.html" class="cta-button">Explore Products</a>
+                    </div>
+                    <!-- Wishlist items will be added here dynamically -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <div class="logo footer-logo">
+                        <img src="images/logo.svg" alt="BRK Sneakers Logo">
+                        <span>BRK Sneakers</span>
+                    </div>
+                    <p>Step into comfort and style with BRK Sneakers - your ultimate destination for quality footwear.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-pinterest"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Shop</h3>
+                    <ul>
+                        <li><a href="products.html?category=sports">Sports Collection</a></li>
+                        <li><a href="products.html?category=casual">Casual Collection</a></li>
+                        <li><a href="products.html?category=women">Women's Collection</a></li>
+                        <li><a href="products.html?category=kids">Kids' Collection</a></li>
+                        <li><a href="products.html">All Products</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Support</h3>
+                    <ul>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">FAQs</a></li>
+                        <li><a href="#">Shipping & Returns</a></li>
+                        <li><a href="#">Size Guide</a></li>
+                        <li><a href="#">Track Order</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Company</h3>
+                    <ul>
+                        <li><a href="#">About BRK</a></li>
+                        <li><a href="#">Our Stores</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Terms & Conditions</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 BRK Sneakers. All rights reserved. Created by Your Team Names</p>
+                <div class="payment-methods">
+                    <i class="fab fa-cc-visa"></i>
+                    <i class="fab fa-cc-mastercard"></i>
+                    <i class="fab fa-cc-amex"></i>
+                    <i class="fab fa-cc-paypal"></i>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Include JavaScript files -->
+    <script src="js/api-connector.js"></script>
+    <script src="js/profile.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/header-search.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/mobile-menu.js"></script>
+</body>
+</html>

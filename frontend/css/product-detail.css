@@ -1139,5 +1139,32 @@
     right: auto !important;
 }
 
+/* Add these rules to fix product price display */
+.product-price {
+    display: flex;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.current-price {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.sale-price {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.original-price {
+    text-decoration: line-through;
+    color: var(--light-text);
+    font-weight: 400;
+    font-size: 0.9rem;
+    margin-right: 5px;
+}
+
 
 

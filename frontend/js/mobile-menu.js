@@ -1,63 +1,68 @@
-// Mobile Menu Functionality
+// Mobile Menu Functionality - Final Fixed Version
 document.addEventListener('DOMContentLoaded', function() {
     // Get elements
     const mobileMenuBtn = document.querySelector('.mobile-menu-button');
-    const navLinks = document.querySelector('.nav-links');
-    const header = document.querySelector('header');
+    let mobileNav = null;
     
     // Check if mobile menu button exists
     if (mobileMenuBtn) {
         // Add click event to mobile menu button
-        mobileMenuBtn.addEventListener('click', function() {
-            // Check if mobile nav already exists
-            if (document.querySelector('.mobile-nav')) {
-                toggleMobileNav();
-                return;
-            }
-            
-            // Create mobile navigation
-            createMobileNav();
-            
-            // Toggle mobile navigation
-            toggleMobileNav();
+        mobileMenuBtn.addEventListener('click', function(e) {
+            e.stopPropagation(); // Stop click from propagating to document
+            toggleMobileMenu();
         });
     }
     
     // Function to create mobile navigation
     function createMobileNav() {
         // Create mobile nav element
-        const mobileNav = document.createElement('div');
+        mobileNav = document.createElement('div');
         mobileNav.className = 'mobile-nav';
         
-        // Get all nav links and clone them
-        const links = navLinks.querySelectorAll('li');
+        // Set up navigation links with correct category parameters
         let mobileNavHTML = '<ul>';
         
-        links.forEach(link => {
-            const anchor = link.querySelector('a');
-            const isActive = anchor.classList.contains('active');
-            
-            mobileNavHTML += `
-                <li>
-                    <a href="${anchor.getAttribute('href')}" ${isActive ? 'class="active"' : ''}>${anchor.textContent}</a>
-                </li>
-            `;
-        });
+        // Home link
+        mobileNavHTML += `
+            <li>
+                <a href="index.html">Home</a>
+            </li>
+        `;
+        
+        // Products link
+        mobileNavHTML += `
+            <li>
+                <a href="products.html">All Products</a>
+            </li>
+        `;
+        
+        // Category-specific links
+        mobileNavHTML += `
+            <li>
+                <a href="products.html?category=men">Men</a>
+            </li>
+            <li>
+                <a href="products.html?category=women">Women</a>
+            </li>
+            <li>
+                <a href="products.html?category=kids">Kids</a>
+            </li>
+        `;
         
         mobileNavHTML += '</ul>';
         
         // Add additional mobile-only links
         mobileNavHTML += `
             <div class="mobile-nav-bottom">
-                <a href="#" class="mobile-nav-link">
+                <a href="profile.html" class="mobile-nav-link">
                     <i class="fas fa-user"></i>
                     <span>My Account</span>
                 </a>
-                <a href="#" class="mobile-nav-link">
+                <a href="profile.html#wishlist" class="mobile-nav-link">
                     <i class="fas fa-heart"></i>
                     <span>Wishlist</span>
                 </a>
-                <a href="#" class="mobile-nav-link">
+                <a href="#" class="mobile-nav-link support-link">
                     <i class="fas fa-headset"></i>
                     <span>Support</span>
                 </a>
@@ -67,23 +72,56 @@ document.addEventListener('DOMContentLoaded', function() {
         // Set HTML content
         mobileNav.innerHTML = mobileNavHTML;
         
+        // Add close button
+        const closeBtn = document.createElement('button');
+        closeBtn.className = 'mobile-menu-close';
+        closeBtn.innerHTML = '<i class="fas fa-times"></i>';
+        mobileNav.insertBefore(closeBtn, mobileNav.firstChild);
+        
+        closeBtn.addEventListener('click', function(e) {
+            e.stopPropagation(); // Prevent propagation
+            closeMobileMenu();
+        });
+        
         // Add mobile nav to the DOM after header
-        header.parentNode.insertBefore(mobileNav, header.nextSibling);
+        const header = document.querySelector('header');
+        if (header) {
+            header.parentNode.insertBefore(mobileNav, header.nextSibling);
+        } else {
+            document.body.appendChild(mobileNav);
+        }
         
         // Add event listeners to mobile nav links
         const mobileNavLinks = mobileNav.querySelectorAll('a');
         mobileNavLinks.forEach(link => {
-            link.addEventListener('click', function() {
+            link.addEventListener('click', function(e) {
+                // For links that need special handling
+                if (link.classList.contains('support-link')) {
+                    e.preventDefault();
+                    if (typeof showNotification === 'function') {
+                        showNotification('Support is available at support@brksneakers.com', 'info', 4000);
+                    } else {
+                        alert('Support is available at support@brksneakers.com');
+                    }
+                }
+                
                 // Close mobile nav when a link is clicked
-                toggleMobileNav();
+                closeMobileMenu();
             });
+        });
+        
+        // Important: Stop propagation of clicks within the menu
+        mobileNav.addEventListener('click', function(e) {
+            e.stopPropagation();
         });
     }
     
     // Function to toggle mobile navigation
-    function toggleMobileNav() {
-        const mobileNav = document.querySelector('.mobile-nav');
-        if (!mobileNav) return;
+    function toggleMobileMenu() {
+        // Check if mobile menu already exists
+        if (!mobileNav) {
+            createMobileNav();
+        }
         
         // Toggle active class on mobile nav
         mobileNav.classList.toggle('active');
@@ -97,6 +135,36 @@ document.addEventListener('DOMContentLoaded', function() {
             document.body.style.overflow = ''; // Re-enable scrolling
         }
     }
+    
+    // Function to close mobile menu
+    function closeMobileMenu() {
+        if (mobileNav) {
+            mobileNav.classList.remove('active');
+            mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+            document.body.style.overflow = ''; // Re-enable scrolling
+        }
+    }
+    
+    // Create a delay before adding the document click handler
+    // This prevents immediate closing of the menu after opening
+    setTimeout(function() {
+        // Close menu when clicking outside
+        document.addEventListener('click', function(e) {
+            if (mobileNav && mobileNav.classList.contains('active')) {
+                // If click is outside the mobile nav and not on the menu button
+                if (!mobileNav.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
+                    closeMobileMenu();
+                }
+            }
+        });
+    }, 100);
+    
+    // Close menu with ESC key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && mobileNav && mobileNav.classList.contains('active')) {
+            closeMobileMenu();
+        }
+    });
     
     // Add CSS for mobile navigation
     const mobileStyle = document.createElement('style');
@@ -113,7 +181,7 @@ document.addEventListener('DOMContentLoaded', function() {
             box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
             transition: left 0.3s ease;
             padding: 20px;
-            padding-top: 70px;
+            padding-top: 50px;
             overflow-y: auto;
         }
         
@@ -147,10 +215,22 @@ document.addEventListener('DOMContentLoaded', function() {
             color: var(--primary-color);
         }
         
+        .mobile-menu-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-color);
+            cursor: pointer;
+        }
+        
         .mobile-nav-bottom {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 10px;
+            margin-bottom: 25px;
         }
         
         .mobile-nav-link {
@@ -179,55 +259,33 @@ document.addEventListener('DOMContentLoaded', function() {
             font-size: 0.8rem;
         }
         
+        /* Fixed overlay background for mobile menu */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1100;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+        
+        .mobile-nav.active ~ body::after,
+        body:has(.mobile-nav.active)::after {
+            opacity: 1;
+            visibility: visible;
+        }
+        
         /* Show mobile menu button only on small screens */
         @media screen and (min-width: 992px) {
             .mobile-menu-button {
                 display: none;
             }
         }
-        
-        /* Mobile menu overlay */
-        .mobile-nav.active::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            right: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: -1;
-        }
-        
-        /* Additional responsive styles */
-        @media screen and (max-width: 992px) {
-            .nav-links {
-                display: none;
-            }
-            
-            .mobile-menu-button {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                width: 40px;
-                height: 40px;
-                background: none;
-                border: none;
-                font-size: 1.5rem;
-                color: var(--text-color);
-                cursor: pointer;
-            }
-        }
     `;
     document.head.appendChild(mobileStyle);
-
-    // Handle window resize events
-    window.addEventListener('resize', function() {
-        // If window width is larger than 992px and mobile nav is open, close it
-        if (window.innerWidth >= 992) {
-            const mobileNav = document.querySelector('.mobile-nav');
-            if (mobileNav && mobileNav.classList.contains('active')) {
-                toggleMobileNav();
-            }
-        }
-    });
 });

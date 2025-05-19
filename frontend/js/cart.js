@@ -31,8 +31,11 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 // Clicked from quick view modal
                 const modal = document.getElementById('quick-view-modal');
-                productId = modal.getAttribute('data-product-id');
-                productName = document.getElementById('modal-product-name').textContent;
+                const productId = productCard ? productCard.getAttribute('data-product-id') : null;
+                if (!productId) {
+                  console.error('Product ID not found for cart operation');
+                 return;}
+                 productName = document.getElementById('modal-product-name').textContent;
                 productImage = document.getElementById('modal-product-image').src;
                 productPrice = document.getElementById('modal-product-price').textContent.trim();
                 
@@ -118,7 +121,6 @@ function updateCartCount() {
         });
     }
     
-    // Function to show cart sidebar
 // Function to show cart sidebar
 function showCartSidebar() {
     // Remove existing cart sidebar if it exists
@@ -202,6 +204,71 @@ function showCartSidebar() {
             }, 300);
         });
     }
+
+function handleCheckout() {
+// Check if user is logged in
+const isLoggedIn = window.profileUtils ? window.profileUtils.checkUserLoggedIn() : false;
+if (!isLoggedIn) {
+    // Show login modal first
+    if (window.profileUtils && window.profileUtils.showAuthModal) {
+        window.profileUtils.showAuthModal('login');
+        
+        // Show message that user needs to log in before checkout
+        showNotification('Please log in or sign up to continue with checkout.', 'info');
+    } else {
+        // Redirect to profile page if profile utils not available
+        window.location.href = 'profile.html';
+    }
+    return;
+}
+
+// Get cart items
+const cart = JSON.parse(localStorage.getItem('brkCart')) || [];
+
+// Check if cart is empty
+if (cart.length === 0) {
+    showNotification('Your cart is empty!', 'warning');
+    return;
+}
+
+// Calculate cart total
+const cartTotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+
+// Create order
+if (window.profileUtils && window.profileUtils.createOrder) {
+    const order = window.profileUtils.createOrder(cart, cartTotal);
+    
+    if (order) {
+        // Show success message
+        showNotification(`Order #${order.id} placed successfully! Thank you for your purchase.`, 'success');        
+        // Clear cart after successful order
+        localStorage.setItem('brkCart', JSON.stringify([]));
+        
+        // Update cart count
+        updateCartCount();
+        
+        // Close cart sidebar
+        const cartSidebar = document.querySelector('.cart-sidebar');
+        if (cartSidebar) {
+            cartSidebar.classList.remove('active');
+            setTimeout(() => {
+                if (document.body.contains(cartSidebar)) {
+                    document.body.removeChild(cartSidebar);
+                }
+            }, 300);
+        }
+        
+        // Redirect to profile orders page
+        window.location.href = 'profile.html#orders';
+    }
+} else {
+    // Fall back to alert if profile utils not available
+    showNotification('Thank you for your order! Your order has been processed.', 'success');    
+    // Clear cart
+    localStorage.setItem('brkCart', JSON.stringify([]));
+    updateCartCount();
+}
+}
     
     // Continue shopping button
     const continueShoppingBtn = cartSidebar.querySelector('.continue-shopping');
@@ -270,13 +337,12 @@ function showCartSidebar() {
     });
     
     // Checkout button
-    const checkoutBtn = cartSidebar.querySelector('.checkout-btn');
-    if (checkoutBtn && !checkoutBtn.classList.contains('disabled')) {
-        checkoutBtn.addEventListener('click', function() {
-            alert('Checkout functionality would be implemented here.');
-            // In a real implementation, this would redirect to a checkout page
-        });
-    }
+const checkoutBtn = cartSidebar.querySelector('.checkout-btn');
+if (checkoutBtn && !checkoutBtn.classList.contains('disabled')) {
+    checkoutBtn.addEventListener('click', function() {
+        handleCheckout();
+    });
+}
     
     // Show cart sidebar with animation
     setTimeout(() => {
@@ -338,13 +404,15 @@ function updateCartSidebar(cartSidebar, cart) {
             `;
         });
         
-        // Update checkout button to enabled
-        const checkoutBtn = cartSidebar.querySelector('.checkout-btn');
-        if (checkoutBtn) {
-            checkoutBtn.classList.remove('disabled');
-        }
-    }
-    
+        // Checkout button
+         const checkoutBtn = cartSidebar.querySelector('.checkout-btn');
+         if (checkoutBtn && !checkoutBtn.classList.contains('disabled')) {
+             checkoutBtn.addEventListener('click', function() {
+        handleCheckout();
+    });
+}
+}
+
     // Update cart items container
     const cartItemsContainer = cartSidebar.querySelector('.cart-items');
     if (cartItemsContainer) {
@@ -613,3 +681,65 @@ function updateCartSidebar(cartSidebar, cart) {
     `;
     document.head.appendChild(cartStyle);
 });
+
+/**
+ * Handle checkout process
+ */
+function handleCheckout() {
+    // Check if user is logged in
+    const isLoggedIn = window.profileUtils && window.profileUtils.checkUserLoggedIn();
+    
+    if (!isLoggedIn) {
+        // Show login modal first
+        if (window.profileUtils && window.profileUtils.showAuthModal) {
+            window.profileUtils.showAuthModal('login');
+            
+            // Show message that user needs to log in before checkout
+            showNotification('Please log in to add items to your wishlist.', 'info');        } else {
+            // Redirect to profile page if profile utils not available
+            window.location.href = 'profile.html';
+        }
+        return;
+    }
+    
+    // Get cart items
+    const cart = JSON.parse(localStorage.getItem('brkCart')) || [];
+    
+    // Check if cart is empty
+    if (cart.length === 0) {
+        showNotification('Your cart is empty!', 'warning');
+        return;
+    }
+    
+    // Calculate cart total
+    const cartTotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+    
+    // Create order
+    if (window.profileUtils && window.profileUtils.createOrder) {
+        const order = window.profileUtils.createOrder(cart, cartTotal);
+        
+        if (order) {
+            // Show success message
+            showNotification(`Order #${order.id} placed successfully! Thank you for your purchase.`, 'success');            
+            // Close cart sidebar
+            const cartSidebar = document.querySelector('.cart-sidebar');
+            if (cartSidebar) {
+                cartSidebar.classList.remove('active');
+                setTimeout(() => {
+                    if (document.body.contains(cartSidebar)) {
+                        document.body.removeChild(cartSidebar);
+                    }
+                }, 300);
+            }
+            
+            // Redirect to profile orders page
+            window.location.href = 'profile.html#orders';
+        }
+    } else {
+        // Fall back to alert if profile utils not available
+        showNotification('Thank you for your order! Your order has been processed.', 'success');        
+        // Clear cart
+        localStorage.setItem('brkCart', JSON.stringify([]));
+        updateCartCount();
+    }
+}

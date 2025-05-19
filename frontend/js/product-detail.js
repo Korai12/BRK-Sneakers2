@@ -36,6 +36,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Initialize add to cart functionality
     initAddToCart();
+
+    // Initialize wishlist button
+    initWishlistButton();
 });
 
 function loadProductDetails(productId) {
@@ -53,13 +56,15 @@ function loadProductDetails(productId) {
         if (productId.startsWith('product-')) {
             // Use sample product or index-based endpoint
             const productIndex = productId.replace('product-', '');
-            apiUrl = `/api/products/sample/${productIndex}`;
+            apiUrl = `/api/products?product_index=${productIndex}`;
         } else {
             // Fallback
             useSampleProductData(productId);
             return; // Exit early since we're using sample data
         }
     }
+    
+    console.log("Fetching product from:", apiUrl);
     
     // Fetch product details from API
     fetch(apiUrl)
@@ -73,6 +78,8 @@ function loadProductDetails(productId) {
             if (!product) {
                 throw new Error('Product data is empty');
             }
+            
+            console.log("Received product data:", product);
             updateProductUI(product);
             showLoading(false);
             
@@ -153,16 +160,33 @@ function updateProductUI(product) {
     // Update product images
     updateProductImages(product.photos || [product.image]);
     
-     // Update product rating based on likes
+    // Update product rating based on likes
     updateProductRating(product.likes || 0);
     
-    // Update product price
-    const priceElement = document.getElementById('product-price');
+    // FIX: Use querySelector with class selector instead of getElementById
+    const priceElement = document.querySelector('.product-price');
     if (priceElement) {
         const currentPrice = priceElement.querySelector('.current-price');
         if (currentPrice) {
-            currentPrice.textContent = `${product.currency || '€'}${product.price.toFixed(2)}`;
+            // Ensure we have a valid price
+            const price = typeof product.price === 'number' ? product.price : 
+                           parseFloat(product.price) || 99.99;
+            
+            // Format price with currency symbol
+            currentPrice.textContent = `${product.currency || '€'}${price.toFixed(2)}`;
+            console.log("Updated price element to:", currentPrice.textContent);
+        } else {
+            console.error('Current price element not found within price container');
+            // Try to create it if it doesn't exist
+            priceElement.innerHTML = `<span class="current-price">${product.currency || '€'}${product.price.toFixed(2)}</span>`;
         }
+    } else {
+        console.error('Product price element not found with class .product-price');
+        // Let's log all available elements for debugging
+        console.log("Available elements:", {
+            productInfo: document.querySelector('.product-information'),
+            allPriceElements: document.querySelectorAll('[class*="price"]')
+        });
     }
     
     // Update product description
@@ -558,15 +582,26 @@ function initAddToCart() {
         
         // Get product information
         const productId = new URLSearchParams(window.location.search).get('product_id') || 'sample-product';
-        const productName = document.getElementById('product-name').textContent;
-        const productPrice = document.querySelector('.current-price').textContent.replace(/[^0-9.]/g, '');
-        const productImage = document.getElementById('main-product-image').src;
+        
+        // Check if elements exist before trying to access them
+        const productNameElement = document.getElementById('product-name');
+        const productPriceElement = document.querySelector('.current-price');
+        const productImageElement = document.getElementById('main-product-image');
+        
+        if (!productNameElement || !productPriceElement || !productImageElement) {
+            console.error('Required product elements not found');
+            return;
+        }
+        
+        const productName = productNameElement.textContent;
+        const productPrice = productPriceElement.textContent.replace(/[^0-9.]/g, '');
+        const productImage = productImageElement.src;
         
         // Get selected size
         const selectedSizeBtn = document.querySelector('.size-btn.active');
         
         if (!selectedSizeBtn) {
-            alert('Please select a size before adding to cart.');
+            showNotification('Please select a size before adding to cart.', 'warning');
             return;
         }
         
@@ -591,7 +626,7 @@ function initAddToCart() {
             price: parseFloat(productPrice),
             image: productImage,
             size: selectedSize,
-            quantity: quantity // Ensure we're only using the exact quantity value
+            quantity: quantity
         };
         
         // Get current cart from localStorage
@@ -1326,3 +1361,167 @@ function calculateStarRating(likes) {
     
     return starRating;
 }
+
+/**
+ * Add current product to wishlist
+ */
+function addCurrentProductToWishlist() {
+    // Check if user is logged in
+    if (window.profileUtils && !window.profileUtils.checkUserLoggedIn()) {
+        window.profileUtils.showAuthModal('login');
+        return;
+    }
+    
+    // Get product information
+    const productId = new URLSearchParams(window.location.search).get('product_id');
+    const productName = document.getElementById('product-name').textContent;
+    const productPrice = document.querySelector('.current-price').textContent.replace(/[^0-9.]/g, '');
+    const productImage = document.getElementById('main-product-image').src;
+    
+    // Create wishlist item
+    const wishlistItem = {
+        id: productId,
+        name: productName,
+        price: parseFloat(productPrice),
+        image: productImage
+    };
+    
+    // Add to wishlist
+    if (window.profileUtils && window.profileUtils.addToWishlist) {
+        window.profileUtils.addToWishlist(wishlistItem);
+    }
+}
+
+/**
+ * Initialize wishlist button functionality
+ */
+function initWishlistButton() {
+    const wishlistBtn = document.querySelector('.wishlist-btn');
+    if (!wishlistBtn) return;
+    
+    // Add click event listener
+    wishlistBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation(); // Prevent any parent handlers from firing
+        
+        // Get product information from page
+        const productId = new URLSearchParams(window.location.search).get('product_id') || 'unknown';
+        const productName = document.getElementById('product-name')?.textContent || 'Product';
+        const productImageElement = document.getElementById('main-product-image');
+        const productImage = productImageElement ? productImageElement.src : '';
+        
+        // Get price (remove currency symbol and convert to number)
+        const priceElement = document.querySelector('.current-price');
+        let productPrice = 0;
+        if (priceElement) {
+            const priceText = priceElement.textContent;
+            const priceMatch = priceText.match(/[\d.]+/);
+            if (priceMatch) {
+                productPrice = parseFloat(priceMatch[0]);
+            }
+        }
+        
+        // Check if user is logged in
+        if (window.profileUtils && !window.profileUtils.checkUserLoggedIn()) {
+            // If not logged in, show login modal
+            if (window.profileUtils.showAuthModal) {
+                window.profileUtils.showAuthModal('login');
+               showNotification('Please log in to add items to your wishlist.', 'info');
+            } else {
+               showNotification('Please log in to add items to your wishlist.', 'info');
+                window.location.href = 'profile.html';
+            }
+            return;
+        }
+        
+        // Create wishlist item
+        const wishlistItem = {
+            id: productId,
+            name: productName,
+            price: productPrice,
+            image: productImage
+        };
+        
+        // Add to wishlist
+        if (window.profileUtils && window.profileUtils.addToWishlist) {
+            window.profileUtils.addToWishlist(wishlistItem);
+        } else {
+            // Fallback if profile utils not available
+            addToWishlistFallback(wishlistItem);
+        }
+        
+        // Update button state
+        this.classList.add('active');
+        this.querySelector('i').classList.remove('far');
+        this.querySelector('i').classList.add('fas');
+    });
+    
+    // Check if product is already in wishlist and update button state
+    checkWishlistState(wishlistBtn);
+}
+
+/**
+ * Check if current product is in wishlist and update button state
+ * @param {HTMLElement} wishlistBtn - Wishlist button element
+ */
+function checkWishlistState(wishlistBtn) {
+    // Get current user data
+    const userData = window.profileUtils?.getUserData();
+    if (!userData) return;
+    
+    // Get product ID from URL
+    const productId = new URLSearchParams(window.location.search).get('product_id');
+    if (!productId) return;
+    
+    // Check if product is in wishlist
+    const userWishlist = JSON.parse(localStorage.getItem('brkWishlist')) || {};
+    const wishlist = userWishlist[userData.id] || [];
+    
+    const inWishlist = wishlist.some(item => item.id === productId);
+    
+    // Update button state
+    if (inWishlist) {
+        wishlistBtn.classList.add('active');
+        const icon = wishlistBtn.querySelector('i');
+        if (icon) {
+            icon.classList.remove('far');
+            icon.classList.add('fas');
+        }
+    }
+}
+
+/**
+ * Fallback function to add to wishlist if profileUtils is not available
+ * @param {Object} item - Wishlist item
+ */
+function addToWishlistFallback(item) {
+    // Get user data
+    const userData = JSON.parse(localStorage.getItem('brkUser'));
+    if (!userData) {
+        showNotification('Please log in to add items to your wishlist.', 'info');
+        return;
+    }
+    
+    // Get wishlist from localStorage
+    const userWishlist = JSON.parse(localStorage.getItem('brkWishlist')) || {};
+    const wishlist = userWishlist[userData.id] || [];
+    
+    // Check if item already exists
+    const existingItem = wishlist.find(wishlistItem => wishlistItem.id === item.id);
+    
+    if (!existingItem) {
+        // Add new item
+        wishlist.push(item);
+        
+        // Save wishlist to localStorage
+        userWishlist[userData.id] = wishlist;
+        localStorage.setItem('brkWishlist', JSON.stringify(userWishlist));
+        
+        // Show success message
+        showNotification('Product added to wishlist!', 'success');
+    } else {
+        // Item already in wishlist
+        showNotification('This product is already in your wishlist!', 'info');
+    }
+}
+

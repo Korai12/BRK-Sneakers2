@@ -701,6 +701,41 @@ addToCartButtons.forEach(button => {
         });
     }
 
+
+    /**
+ * Update slideshow likes when a product is liked
+ * @param {string} productId - ID of the product
+ * @param {number} newLikes - New number of likes
+ */
+function updateSlideshowLikes(productId, newLikes) {
+    // Get all slides
+    const slides = document.querySelectorAll('.hero-slide');
+    
+    slides.forEach(slide => {
+        // Check if this slide contains the product that was liked
+        // We need to extract the product ID from the slide content
+        const slideContent = slide.querySelector('.slide-content');
+        if (!slideContent) return;
+        
+        const productName = slideContent.querySelector('h1')?.textContent;
+        if (!productName) return;
+        
+        // Find the likes span element
+        const likesSpan = slideContent.querySelector('.product-rating span');
+        if (likesSpan && likesSpan.textContent.includes('(')) {
+            // Update the likes count
+            likesSpan.textContent = `(${newLikes})`;
+            
+            // Also update the stars if they're displayed
+            const starsContainer = slideContent.querySelector('.stars-container');
+            if (starsContainer) {
+                const starRating = calculateStarRating(newLikes);
+                updateStarsDisplay(starsContainer, starRating);
+            }
+        }
+    });
+}
+
     /**
      * Update quick view functionality to only show larger images
      */
@@ -1134,4 +1169,52 @@ function updatePriceDisplays() {
         // Update the element's text
         priceElement.textContent = updatedText;
     });
+}
+
+/**
+ * Show visual notification instead of alert
+ * @param {string} message - Message to display
+ * @param {string} type - Type of notification: 'success', 'error', 'info', 'warning'
+ * @param {number} duration - Duration in milliseconds
+ */
+function showNotification(message, type = 'success', duration = 3000) {
+    // Remove existing notifications of the same type
+    const existingNotifications = document.querySelectorAll(`.notification.${type}`);
+    existingNotifications.forEach(notification => {
+        if (document.body.contains(notification)) {
+            document.body.removeChild(notification);
+        }
+    });
+    
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    
+    // Set icon based on type
+    let icon = 'check';
+    switch (type) {
+        case 'error': icon = 'exclamation-circle'; break;
+        case 'info': icon = 'info-circle'; break;
+        case 'warning': icon = 'exclamation-triangle'; break;
+    }
+    
+    notification.innerHTML = `<i class="fas fa-${icon}"></i> ${message}`;
+    document.body.appendChild(notification);
+    
+    // Show notification with animation
+    setTimeout(() => {
+        notification.classList.add('active');
+        
+        // Hide after specified duration
+        setTimeout(() => {
+            notification.classList.remove('active');
+            
+            // Remove from DOM after animation completes
+            setTimeout(() => {
+                if (document.body.contains(notification)) {
+                    document.body.removeChild(notification);
+                }
+            }, 300);
+        }, duration);
+    }, 10);
 }
