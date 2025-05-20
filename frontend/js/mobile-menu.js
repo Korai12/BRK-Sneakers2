@@ -98,10 +98,85 @@ document.addEventListener('DOMContentLoaded', function() {
                 // For links that need special handling
                 if (link.classList.contains('support-link')) {
                     e.preventDefault();
-                    if (typeof showNotification === 'function') {
-                        showNotification('Support is available at support@brksneakers.com', 'info', 4000);
+                    
+                    // Open the Contact Us modal
+                    const infoModal = document.getElementById('info-modal');
+                    const modalContent = document.getElementById('modal-content');
+                    
+                    // Check if modal elements exist
+                    if (infoModal && modalContent) {
+                        // Get Contact Us content (same as in main.js)
+                        const contactContent = `
+                            <h2>Contact Us</h2>
+                            <p>We'd love to hear from you! Get in touch with our team for any questions, feedback, or assistance.</p>
+                            <div class="contact-info">
+                                <p><strong>Email:</strong> support@brksneakers.com</p>
+                                <p><strong>Phone:</strong> +1 (555) 123-4567</p>
+                                <p><strong>Address:</strong> 123 Footwear Street, Sneakerville, SN 12345</p>
+                            </div>
+                            <form class="contact-form">
+                                <div class="form-group">
+                                    <label for="contact-name">Name</label>
+                                    <input type="text" id="contact-name" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="contact-email">Email</label>
+                                    <input type="email" id="contact-email" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="contact-message">Message</label>
+                                    <textarea id="contact-message" rows="5" required></textarea>
+                                </div>
+                                <button type="submit" class="cta-button">Send Message</button>
+                            </form>
+                        `;
+                        
+                        // Set the modal content
+                        modalContent.innerHTML = contactContent;
+                        
+                        // Display the modal
+                        infoModal.style.display = 'block';
+                        document.body.style.overflow = 'hidden'; // Prevent scrolling
+                        
+                        // Add event listener for contact form submission
+                        const contactForm = modalContent.querySelector('.contact-form');
+                        if (contactForm) {
+                            contactForm.addEventListener('submit', function(event) {
+                                event.preventDefault();
+                                
+                                // Show success notification
+                                if (typeof showNotification === 'function') {
+                                    showNotification('Thank you for your message! We will contact you as soon as possible.', 'success', 4000);
+                                } else {
+                                    alert('Thank you for your message! We will contact you as soon as possible.');
+                                }
+                                
+                                // Reset form fields
+                                this.reset();
+                                
+                                // Close modal after a brief delay
+                                setTimeout(() => {
+                                    infoModal.style.display = 'none';
+                                    document.body.style.overflow = ''; // Re-enable scrolling
+                                }, 2000);
+                            });
+                        }
+                        
+                        // Make sure modal close functionality works
+                        const closeModalBtn = infoModal.querySelector('.close-modal');
+                        if (closeModalBtn) {
+                            closeModalBtn.addEventListener('click', function() {
+                                infoModal.style.display = 'none';
+                                document.body.style.overflow = ''; // Re-enable scrolling
+                            });
+                        }
                     } else {
-                        alert('Support is available at support@brksneakers.com');
+                        // Fallback if modal elements don't exist
+                        if (typeof showNotification === 'function') {
+                            showNotification('Support is available at support@brksneakers.com', 'info', 4000);
+                        } else {
+                            alert('Support is available at support@brksneakers.com');
+                        }
                     }
                 }
                 

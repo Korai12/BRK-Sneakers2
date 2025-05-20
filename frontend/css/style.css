@@ -1,7 +1,7 @@
 /* Global Styles */
 :root {
     --primary-color: #ff6b6b;
-    --secondary-color: #4ecdc4;
+    --secondary-color: #ff6b6b;
     --accent-color: #ff9f43;
     --text-color: #2d3436;
     --light-text: #636e72;
@@ -557,46 +557,9 @@ header {
     font-size: 0.9rem;
 }
 
-/* Newsletter Styles */
-.newsletter {
-    padding: 80px 0;
-    background-color: var(--dark-bg);
-    color: var(--white);
-}
-
-.newsletter-content {
-    max-width: 700px;
-    margin: 0 auto;
-    text-align: center;
-}
-
-.newsletter-content h2 {
-    font-size: 2rem;
-    margin-bottom: 15px;
-}
-
-.newsletter-content p {
-    margin-bottom: 30px;
-    opacity: 0.8;
-}
-
-.newsletter-form {
-    display: flex;
-    max-width: 500px;
-    margin: 0 auto;
-}
-
-.newsletter-form input {
-    flex: 1;
-    padding: 15px;
-    border: none;
-    border-radius: 4px 0 0 4px;
-    font-family: 'Poppins', sans-serif;
-    font-size: 1rem;
-}
-
-.newsletter-form .cta-button {
-    border-radius: 0 4px 4px 0;
+.benefit-card .fas.fa-star,
+.benefit-card i.fas.fa-star:before {
+    color: var(--primary-color) !important; 
 }
 
 /* Footer Styles */
@@ -606,94 +569,176 @@ footer {
     padding-top: 60px;
 }
 
+/* Footer Styling with new layout */
+footer {
+    background-color: #1f2937;
+    color: #ffffff;
+    padding: 60px 0 20px;
+}
+
 .footer-content {
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr 1fr;
-    gap: 40px;
-    padding-bottom: 40px;
+    grid-template-columns: 2fr 1fr 1fr; /* Make first column wider for logo */
+    gap: 80px; /* Add more space between columns */
+    margin-bottom: 50px;
+}
+
+/* Left column with logo */
+.footer-logo-container {
+    /* Black box dimensions */
+    width: 100%;
+    max-width: 300px;
 }
 
 .footer-logo {
+    width: 100%;
+    max-width: 300px;
+    display: block;
+    margin-bottom: 15px;
+}
+
+.footer-logo img {
+    width: 200px !important; /* Force a larger width */
+    height: auto !important;
+    max-width: 100% !important;
+    object-fit: contain !important; /* Ensure proper scaling */
     margin-bottom: 20px;
 }
 
-.footer-column p {
+/* We'll also make the SVG itself larger */
+.footer-logo svg {
+    width: 200px !important;
+    height: auto !important;
+}
+
+.logo-title {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #ffffff;
+}
+
+.logo-description {
+    color: #ffffff;
     opacity: 0.8;
-    margin-bottom: 20px;
-    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 25px;
 }
 
-.social-links {
-    display: flex;
-    gap: 15px;
-}
-
-.social-links a {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 36px;
-    height: 36px;
-    background-color: rgba(255, 255, 255, 0.1);
-    border-radius: 50%;
-    transition: var(--transition);
-}
-
-.social-links a:hover {
-    background-color: var(--primary-color);
-    transform: translateY(-3px);
-}
-
+/* Section headings */
 .footer-column h3 {
-    font-size: 1.2rem;
-    margin-bottom: 20px;
-    position: relative;
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 25px;
     padding-bottom: 10px;
+    position: relative;
 }
 
-.footer-column h3::after {
+/* Red underline for section headings */
+.footer-column h3:after {
     content: '';
     position: absolute;
     bottom: 0;
     left: 0;
     width: 40px;
     height: 2px;
-    background-color: var(--primary-color);
+    background-color: #ff6b6b;
+}
+
+.footer-column ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
 }
 
 .footer-column ul li {
-    margin-bottom: 12px;
+    margin-bottom: 15px;
 }
 
 .footer-column ul li a {
+    color: #ffffff;
     opacity: 0.8;
-    font-size: 0.95rem;
-    transition: var(--transition);
+    transition: all 0.3s ease;
+    text-decoration: none;
 }
 
 .footer-column ul li a:hover {
     opacity: 1;
-    color: var(--primary-color);
-    padding-left: 5px;
+    color: #ff6b6b;
 }
 
-.footer-bottom {
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 20px 0;
+/* Social links */
+.social-links {
     display: flex;
-    justify-content: space-between;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.social-links a {
+    width: 40px;
+    height: 40px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    display: flex;
     align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    transition: all 0.3s ease;
 }
 
-.footer-bottom p {
+.social-links a:hover {
+    background-color: #ff6b6b;
+    transform: translateY(-3px);
+}
+
+/* Separator line */
+.footer-separator {
+    width: 100%;
+    height: 1px;
+    background-color: rgba(255, 255, 255, 0.1);
+    margin: 50px 0 20px;
+}
+
+/* Copyright section */
+.footer-copyright {
+    text-align: left;
+    color: rgba(255, 255, 255, 0.7);
     font-size: 0.9rem;
-    opacity: 0.7;
+    padding: 15px 0;
 }
 
-.payment-methods {
-    display: flex;
-    gap: 10px;
-    font-size: 1.5rem;
+
+
+/* Responsive adjustments */
+@media screen and (max-width: 992px) {
+    .footer-content {
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+    }
+    
+    .footer-logo-container {
+        grid-column: span 2;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .footer-content {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+    
+    .footer-logo-container {
+        margin: 0 auto;
+    }
+    
+    .footer-column h3:after {
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    
+    .social-links {
+        justify-content: center;
+    }
 }
 
 /* Products Page Specific Styles */
@@ -1128,19 +1173,6 @@ footer {
     
     .benefit-card {
         padding: 20px 15px;
-    }
-    
-    .newsletter-form {
-        flex-direction: column;
-    }
-    
-    .newsletter-form input {
-        border-radius: 4px;
-        margin-bottom: 10px;
-    }
-    
-    .newsletter-form .cta-button {
-        border-radius: 4px;
     }
     
     .footer-content {
@@ -2650,3 +2682,114 @@ footer {
 .notification + .notification + .notification {
     top: calc(20px + 140px);
 }
+
+/* Improved modal styling */
+#info-modal, .modal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.modal-content {
+    background-color: #ffffff;
+    color:#333;
+    margin: 5% auto; /* Reduced from 10% to 5% to make it bigger vertically */
+    padding: 40px; /* Increased padding */
+    border-radius: 8px;
+    max-width: 800px; /* Increased from typical 600-700px */
+    width: 80%; /* Set percentage width for responsiveness */
+    position: relative;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Modal header */
+.modal-content h2 {
+    font-size: 28px; /* Larger heading */
+    margin-bottom: 25px;
+    color: #2d3436;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+/* Form elements in modals */
+.modal-content input[type="text"],
+.modal-content input[type="email"],
+.modal-content textarea {
+    width: 100%;
+    padding: 15px; /* Larger padding */
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 16px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.modal-content textarea {
+    min-height: 180px; /* Taller textarea */
+    resize: vertical;
+}
+
+/* Modal action buttons */
+.modal-content button {
+    padding: 15px 30px; /* Larger buttons */
+    font-size: 18px;
+    border-radius: 6px;
+    background-color: #ff6b6b;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.modal-content button:hover {
+    background-color: #ff5252;
+}
+
+/* Close button */
+.close-modal {
+    position: absolute;
+    top: 20px;
+    right: 25px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #666;
+    transition: color 0.3s ease;
+}
+
+.close-modal:hover {
+    color: #ff6b6b;
+}
+
+/* Contact information in modal */
+.contact-info {
+    margin-bottom: 30px;
+}
+
+.contact-info p {
+    margin-bottom: 15px;
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+.contact-info strong {
+    font-weight: 600;
+    color: #333;
+    display: inline-block;
+    width: 80px;
+}
+
+/* Media query for smaller screens */
+@media (max-width: 768px) {
+    .modal-content {
+        width: 90%;
+        padding: 25px;
+    }
+}
+

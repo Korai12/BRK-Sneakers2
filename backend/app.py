@@ -202,12 +202,12 @@ def get_products_by_category(category):
     try:
         limit = request.args.get('limit')
         
-        # Create the query
+        # Modified query to find products where the category is in the array
+        cursor = products_collection.find({"category": category})
+        
         if limit:
             limit = int(limit)
-            cursor = products_collection.find({'category': category}).limit(limit)
-        else:
-            cursor = products_collection.find({'category': category})
+            cursor = cursor.limit(limit)
         
         # Convert to serializable dictionaries
         products = [make_json_serializable(product) for product in cursor]

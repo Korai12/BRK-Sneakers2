@@ -1,7 +1,6 @@
-// Complete replacement for products.js to fix all errors
-
 // JavaScript for the products page functionality
 document.addEventListener('DOMContentLoaded', function() {
+    
     // Load all products on page load
     loadAllProducts();
     
@@ -10,6 +9,113 @@ document.addEventListener('DOMContentLoaded', function() {
     const searchButton = document.getElementById('search-button');
     const productsContainer = document.getElementById('products-container');
     
+    // Filter functionality
+    const categoryFilter = document.getElementById('category-filter');
+    const priceFilter = document.getElementById('price-filter');
+    const sortBy = document.getElementById('sort-by');
+    
+    // Function to apply filters
+    function applyFilters() {
+        // Get filter values
+        const category = categoryFilter ? categoryFilter.value : 'all';
+        const priceRange = priceFilter ? priceFilter.value : 'all';
+        const sortOption = sortBy ? sortBy.value : 'popularity';
+        
+        // Construct API URL with filters
+        let apiUrl = '/api/products';
+        
+        // Add category filter
+        if (category !== 'all') {
+            apiUrl = `/api/products/category/${category}`;
+        }
+        
+        // Add sort parameter
+        let sortParam = '';
+        let sortOrder = 1; // ascending
+        
+        switch (sortOption) {
+            case 'price-low':
+                sortParam = 'price';
+                sortOrder = 1;
+                break;
+            case 'price-high':
+                sortParam = 'price';
+                sortOrder = -1;
+                break;
+            case 'popularity':
+                sortParam = 'likes';
+                sortOrder = -1;
+                break;
+            case 'newest':
+                // For demo purposes, we'll sort by ID which is roughly insertion order
+                sortParam = '_id';
+                sortOrder = -1;
+                break;
+        }
+        
+        // Add sort parameters to URL
+        if (sortParam) {
+            apiUrl += `?sort_by=${sortParam}&sort_order=${sortOrder}`;
+        }
+        
+        // Fetch filtered products
+        fetch(apiUrl)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(products => {
+                // Apply price filter on client-side (since the API doesn't support it directly)
+                if (priceRange !== 'all') {
+                    products = filterByPrice(products, priceRange);
+                }
+                
+                // Update products display
+                displayProducts(products);
+            })
+            .catch(error => {
+                console.error('Error applying filters:', error);
+                displayErrorMessage("There was a problem filtering products. Please try again later.");
+            });
+    }
+
+     function setFiltersFromURL() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const categoryParam = urlParams.get('category');
+        
+        // If category parameter exists in URL, set the category filter
+        if (categoryParam && categoryFilter) {
+            // Find the option that matches the category
+            for (let i = 0; i < categoryFilter.options.length; i++) {
+                if (categoryFilter.options[i].value === categoryParam) {
+                    categoryFilter.selectedIndex = i;
+                    break;
+                }
+            }
+            
+            // After setting the filter, apply it to show filtered products
+            applyFilters();
+        }
+    }
+    
+    // Now call setFiltersFromURL after everything is defined
+    setFiltersFromURL();
+
+    // Add event listeners to filter controls
+    if (categoryFilter) {
+        categoryFilter.addEventListener('change', applyFilters);
+    }
+    
+    if (priceFilter) {
+        priceFilter.addEventListener('change', applyFilters);
+    }
+    
+    if (sortBy) {
+        sortBy.addEventListener('change', applyFilters);
+    }
+
     if (searchInput && searchButton) {
         // Search when button is clicked
         searchButton.addEventListener('click', function() {
@@ -383,90 +489,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 10);
     }
     
-    // Filter functionality
-    const categoryFilter = document.getElementById('category-filter');
-    const priceFilter = document.getElementById('price-filter');
-    const sortBy = document.getElementById('sort-by');
     
-    // Add event listeners to filter controls
-    if (categoryFilter) {
-        categoryFilter.addEventListener('change', applyFilters);
-    }
-    
-    if (priceFilter) {
-        priceFilter.addEventListener('change', applyFilters);
-    }
-    
-    if (sortBy) {
-        sortBy.addEventListener('change', applyFilters);
-    }
-    
-    // Function to apply filters
-    function applyFilters() {
-        // Get filter values
-        const category = categoryFilter ? categoryFilter.value : 'all';
-        const priceRange = priceFilter ? priceFilter.value : 'all';
-        const sortOption = sortBy ? sortBy.value : 'popularity';
-        
-        // Construct API URL with filters
-        let apiUrl = '/api/products';
-        
-        // Add category filter
-        if (category !== 'all') {
-            apiUrl = `/api/products/category/${category}`;
-        }
-        
-        // Add sort parameter
-        let sortParam = '';
-        let sortOrder = 1; // ascending
-        
-        switch (sortOption) {
-            case 'price-low':
-                sortParam = 'price';
-                sortOrder = 1;
-                break;
-            case 'price-high':
-                sortParam = 'price';
-                sortOrder = -1;
-                break;
-            case 'popularity':
-                sortParam = 'likes';
-                sortOrder = -1;
-                break;
-            case 'newest':
-                // For demo purposes, we'll sort by ID which is roughly insertion order
-                sortParam = '_id';
-                sortOrder = -1;
-                break;
-        }
-        
-        // Add sort parameters to URL
-        if (sortParam) {
-            apiUrl += `?sort_by=${sortParam}&sort_order=${sortOrder}`;
-        }
-        
-        // Fetch filtered products
-        fetch(apiUrl)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(products => {
-                // Apply price filter on client-side (since the API doesn't support it directly)
-                if (priceRange !== 'all') {
-                    products = filterByPrice(products, priceRange);
-                }
-                
-                // Update products display
-                displayProducts(products);
-            })
-            .catch(error => {
-                console.error('Error applying filters:', error);
-                displayErrorMessage("There was a problem filtering products. Please try again later.");
-            });
-    }
     
     // Function to filter products by price on client-side
     function filterByPrice(products, priceRange) {

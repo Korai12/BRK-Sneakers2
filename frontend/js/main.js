@@ -1,5 +1,53 @@
 // Main JavaScript for site-wide functionality
 document.addEventListener('DOMContentLoaded', function() {
+    // Function to highlight active navigation link based on URL
+    function updateActiveNavLink() {
+        // Get current URL path
+        const currentPath = window.location.pathname;
+        const urlParams = new URLSearchParams(window.location.search);
+        const categoryParam = urlParams.get('category');
+        
+        // Get all nav links
+        const navLinks = document.querySelectorAll('.nav-links a');
+        
+        // Remove active class from all links
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+        });
+        
+        // Set active class based on path or category parameter
+        if (currentPath.includes('index.html') || currentPath === '/' || currentPath.endsWith('/')) {
+            // Home page
+            navLinks.forEach(link => {
+                if (link.textContent.trim() === 'Home') {
+                    link.classList.add('active');
+                }
+            });
+        } else if (currentPath.includes('products.html')) {
+            if (!categoryParam) {
+                // All Products page with no category
+                navLinks.forEach(link => {
+                    if (link.textContent.trim() === 'All Products') {
+                        link.classList.add('active');
+                    }
+                });
+            } else {
+                // Category pages
+                navLinks.forEach(link => {
+                    // Convert both to lowercase for case-insensitive comparison
+                    if (link.textContent.trim().toLowerCase() === categoryParam.toLowerCase()) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+        }
+    }
+    
+    // Run when page loads
+    updateActiveNavLink();
+
+
+
     // Fix any JavaScript syntax errors in hardcoded products first
     fixHardcodedProductErrors();
     
@@ -1218,3 +1266,169 @@ function showNotification(message, type = 'success', duration = 3000) {
         }, duration);
     }, 10);
 }
+
+// Modal functionality for footer information links
+document.addEventListener('DOMContentLoaded', function() {
+    const infoLinks = document.querySelectorAll('.info-link');
+    const infoModal = document.getElementById('info-modal');
+    const modalContent = document.getElementById('modal-content');
+    const closeModal = infoModal.querySelector('.close-modal');
+    
+    // Information content 
+    const infoContent = {
+        contact: `
+            <h2>Contact Us</h2>
+            <p>We'd love to hear from you! Get in touch with our team for any questions, feedback, or assistance.</p>
+            <div class="contact-info">
+                <p><strong>Email:</strong> support@brksneakers.com</p>
+                <p><strong>Phone:</strong> +1 (555) 123-4567</p>
+                <p><strong>Address:</strong> 123 Footwear Street, Sneakerville, SN 12345</p>
+            </div>
+            <form class="contact-form">
+                <div class="form-group">
+                    <label for="contact-name">Name</label>
+                    <input type="text" id="contact-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="contact-email">Email</label>
+                    <input type="email" id="contact-email" required>
+                </div>
+                <div class="form-group">
+                    <label for="contact-message">Message</label>
+                    <textarea id="contact-message" rows="5" required></textarea>
+                </div>
+                <button type="submit" class="cta-button">Send Message</button>
+            </form>
+        `,
+        about: `
+            <h2>About BRK Sneakers</h2>
+            <p>BRK Sneakers was founded in 2020 with a simple mission: to create comfortable, stylish, and affordable footwear for everyone.</p>
+            <p>Our team of designers works tirelessly to combine the latest trends with time-tested comfort technology. We believe that everyone deserves to step out in style without compromising on comfort.</p>
+            <p>All our products are crafted with sustainable materials and ethical manufacturing practices. We're committed to reducing our environmental footprint while delivering the highest quality products to our customers.</p>
+            <h3>Our Values</h3>
+            <ul>
+                <li><strong>Quality:</strong> We never compromise on materials or craftsmanship.</li>
+                <li><strong>Innovation:</strong> We're constantly evolving our designs and technology.</li>
+                <li><strong>Sustainability:</strong> We care for our planet through responsible practices.</li>
+                <li><strong>Inclusion:</strong> We create shoes for everyone, regardless of age or style preference.</li>
+            </ul>
+        `,
+        terms: `
+            <h2>Terms & Conditions</h2>
+            <p>Last updated: May 20, 2025</p>
+            
+            <h3>1. Introduction</h3>
+            <p>Welcome to BRK Sneakers. These Terms and Conditions govern your use of our website and the purchase of products from our online store.</p>
+            
+            <h3>2. Acceptance of Terms</h3>
+            <p>By accessing and using our website, you accept and agree to be bound by these Terms and Conditions. If you do not agree, please do not use our website.</p>
+            
+            <h3>3. Products and Pricing</h3>
+            <p>All product descriptions, images, and prices are accurate to the best of our knowledge. We reserve the right to change prices without notice.</p>
+            
+            <h3>4. Orders and Payment</h3>
+            <p>All orders are subject to acceptance and availability. Payment must be made in full at the time of purchase.</p>
+            
+            <h3>5. Shipping and Delivery</h3>
+            <p>Delivery times are estimates only. We are not responsible for delays beyond our control.</p>
+            
+            <h3>6. Returns and Refunds</h3>
+            <p>Products may be returned within 30 days of delivery. Please see our Returns Policy for details.</p>
+            
+            <h3>7. Intellectual Property</h3>
+            <p>All content on this website is the property of BRK Sneakers and is protected by copyright laws.</p>
+            
+            <h3>8. Limitation of Liability</h3>
+            <p>BRK Sneakers shall not be liable for any indirect, incidental, or consequential damages.</p>
+            
+            <h3>9. Governing Law</h3>
+            <p>These Terms and Conditions shall be governed by the laws of the state/country of our incorporation.</p>
+        `,
+        privacy: `
+            <h2>Privacy Policy</h2>
+            <p>Last updated: May 20, 2025</p>
+            
+            <h3>1. Information We Collect</h3>
+            <p>We collect personal information such as your name, email address, shipping address, and payment details when you make a purchase.</p>
+            
+            <h3>2. How We Use Your Information</h3>
+            <p>We use your information to process orders, communicate with you about your purchase, and improve our products and services.</p>
+            
+            <h3>3. Information Sharing</h3>
+            <p>We do not sell or rent your personal information to third parties. We may share your information with service providers who help us operate our business.</p>
+            
+            <h3>4. Cookies</h3>
+            <p>We use cookies to enhance your browsing experience and analyze website traffic.</p>
+            
+            <h3>5. Security</h3>
+            <p>We implement appropriate security measures to protect your personal information.</p>
+            
+            <h3>6. Your Rights</h3>
+            <p>You have the right to access, correct, or delete your personal information.</p>
+            
+            <h3>7. Changes to This Policy</h3>
+            <p>We may update this policy from time to time. Please check this page regularly for updates.</p>
+            
+            <h3>8. Contact Us</h3>
+            <p>If you have any questions about our Privacy Policy, please contact us at privacy@brksneakers.com.</p>
+        `
+    };
+    
+    // Open modal with specific content
+    infoLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const infoType = this.getAttribute('data-info');
+            
+            if (infoContent[infoType]) {
+                modalContent.innerHTML = infoContent[infoType];
+                infoModal.style.display = 'block';
+                document.body.style.overflow = 'hidden'; // Prevent scrolling
+            
+            // Add event listener for contact form submission
+                if (infoType === 'contact') {
+                    const contactForm = modalContent.querySelector('.contact-form');
+                    if (contactForm) {
+                        contactForm.addEventListener('submit', function(event) {
+                            event.preventDefault();
+                            
+                            // Show success notification
+                            showNotification('Thank you for your message! We will contact you as soon as possible.', 'success', 4000);
+                            
+                            // Reset form fields
+                            this.reset();
+                            
+                            // Close modal after a brief delay
+                            setTimeout(() => {
+                                infoModal.style.display = 'none';
+                                document.body.style.overflow = ''; // Re-enable scrolling
+                            }, 2000);
+                        });
+                    }
+                }
+            }
+        });
+    });
+    
+    // Close modal
+    closeModal.addEventListener('click', function() {
+        infoModal.style.display = 'none';
+        document.body.style.overflow = ''; // Re-enable scrolling
+    });
+    
+    // Close when clicking outside
+    window.addEventListener('click', function(e) {
+        if (e.target === infoModal) {
+            infoModal.style.display = 'none';
+            document.body.style.overflow = '';
+        }
+    });
+    
+    // Close with ESC key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && infoModal.style.display === 'block') {
+            infoModal.style.display = 'none';
+            document.body.style.overflow = '';
+        }
+    });
+});

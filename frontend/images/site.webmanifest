@@ -1,0 +1,19 @@
+{
+  "name": "BRK Sneakers",
+  "short_name": "BRK",
+  "icons": [
+    {
+      "src": "favicon-16x16.svg",
+      "sizes": "16x16",
+      "type": "image/svg"
+    },
+    {
+      "src": "favicon-32x32.svg",
+      "sizes": "32x32",
+      "type": "image/svg"
+    }
+  ],
+  "theme_color": "#ff6b6b",
+  "background_color": "#ffffff",
+  "display": "standalone"
+}

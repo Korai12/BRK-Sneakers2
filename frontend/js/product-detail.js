@@ -150,6 +150,21 @@ function updateProductUI(product) {
     if (breadcrumbName) {
         breadcrumbName.textContent = product.name;
     }
+
+    // Update category breadcrumb
+    const categoryBreadcrumb = document.getElementById('product-category-breadcrumb');
+    if (categoryBreadcrumb && product.category) {
+        // Get the first category if it's an array
+        let displayCategory = Array.isArray(product.category) ? product.category[0] : product.category;
+        
+        // Capitalize first letter
+        displayCategory = displayCategory.charAt(0).toUpperCase() + displayCategory.slice(1);
+        
+        // Update text and href
+        categoryBreadcrumb.textContent = displayCategory;
+        categoryBreadcrumb.href = `products.html?category=${Array.isArray(product.category) ? product.category[0] : product.category}`;
+    }
+
     
     // Update product name
     const productName = document.getElementById('product-name');
