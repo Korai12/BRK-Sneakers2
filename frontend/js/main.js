@@ -1281,8 +1281,8 @@ document.addEventListener('DOMContentLoaded', function() {
             <p>We'd love to hear from you! Get in touch with our team for any questions, feedback, or assistance.</p>
             <div class="contact-info">
                 <p><strong>Email:</strong> support@brksneakers.com</p>
-                <p><strong>Phone:</strong> +1 (555) 123-4567</p>
-                <p><strong>Address:</strong> 123 Footwear Street, Sneakerville, SN 12345</p>
+                <p><strong>Phone:</strong>+30 6999999999</p>
+                <p><strong>Address:</strong>Thessaloniki 541 24</p>
             </div>
             <form class="contact-form">
                 <div class="form-group">
@@ -1302,7 +1302,7 @@ document.addEventListener('DOMContentLoaded', function() {
         `,
         about: `
             <h2>About BRK Sneakers</h2>
-            <p>BRK Sneakers was founded in 2020 with a simple mission: to create comfortable, stylish, and affordable footwear for everyone.</p>
+            <p>BRK Sneakers was founded in 2025 with a simple mission: to create comfortable, stylish, and affordable footwear for everyone.</p>
             <p>Our team of designers works tirelessly to combine the latest trends with time-tested comfort technology. We believe that everyone deserves to step out in style without compromising on comfort.</p>
             <p>All our products are crafted with sustainable materials and ethical manufacturing practices. We're committed to reducing our environmental footprint while delivering the highest quality products to our customers.</p>
             <h3>Our Values</h3>

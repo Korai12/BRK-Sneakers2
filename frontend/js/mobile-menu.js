@@ -111,8 +111,8 @@ document.addEventListener('DOMContentLoaded', function() {
                             <p>We'd love to hear from you! Get in touch with our team for any questions, feedback, or assistance.</p>
                             <div class="contact-info">
                                 <p><strong>Email:</strong> support@brksneakers.com</p>
-                                <p><strong>Phone:</strong> +1 (555) 123-4567</p>
-                                <p><strong>Address:</strong> 123 Footwear Street, Sneakerville, SN 12345</p>
+                                <p><strong>Phone:</strong> +30 6999999999</p>
+                                <p><strong>Address:</strong> Thessaloniki 541 24</p>
                             </div>
                             <form class="contact-form">
                                 <div class="form-group">
