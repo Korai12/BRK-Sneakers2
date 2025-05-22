@@ -15,7 +15,9 @@ from bson.objectid import ObjectId  # Updated import
 from pymongo import MongoClient
 
 # MongoDB connection with correct port
-client = MongoClient('mongodb://localhost:27017/')
+import os
+mongo_uri = os.environ.get('MONGO_URI', 'mongodb://localhost:27017/')
+client = MongoClient(mongo_uri)
 db = client['brk_sneakers']
 products_collection = db['products']
 
@@ -226,6 +228,11 @@ def get_products_by_category(category):
 
 # Run the app
 if __name__ == '__main__':
+    # Get configuration from environment variables (for Docker compatibility)
+    host = os.environ.get('HOST', '0.0.0.0')
+    port = int(os.environ.get('PORT', 5000))
+    debug = os.environ.get('DEBUG', 'True') == 'True'
+    
     print(f"Frontend folder path: {os.path.abspath(app.static_folder)}")
-    print(f"API running at http://localhost:5000")
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    print(f"API running at http://{host}:{port}")
+    app.run(debug=debug, host=host, port=port)

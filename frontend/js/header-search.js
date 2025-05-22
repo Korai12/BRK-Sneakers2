@@ -165,15 +165,15 @@ document.addEventListener('DOMContentLoaded', function() {
             // Add products in this category
             categorizedProducts[category].forEach(product => {
                 resultsHTML += `
-                    <a href="products.html?product_id=${product._id}" class="search-product">
-                        <div class="search-product-image">
-                            <img src="images/products/${product.image}" alt="${product.name}">
-                        </div>
-                        <div class="search-product-info">
-                            <h4>${product.name}</h4>
-                            <p class="search-product-price">${product.price.toFixed(2)}</p>
-                        </div>
-                    </a>
+                    <a href="product-detail.html?product_id=${product._id}" class="search-product">
+                    <div class="search-product-image">
+                        <img src="images/products/${product.image}" alt="${product.name}">
+                    </div>
+                    <div class="search-product-info">
+                        <h4>${product.name}</h4>
+                        <p class="search-product-price">€${product.price.toFixed(2)}</p>
+                    </div>
+                </a>
                 `;
             });
             

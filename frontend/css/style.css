@@ -93,7 +93,7 @@ button, .button, .cta-button, .button-secondary {
 }
 
 .button-secondary:hover {
-    background-color: #3dbdb3;
+    background-color: #d63232;
     transform: translateY(-2px);
 }
 
@@ -336,7 +336,7 @@ header {
 
 .categories-grid {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(6, 1fr);
     gap: 20px;
 }
 
@@ -1142,7 +1142,7 @@ footer {
 
 @media screen and (max-width: 576px) {
     .categories-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: 1fr;
     }
     
     .products-grid {

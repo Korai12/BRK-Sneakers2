@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  # Frontend service
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: docker/Dockerfile
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - brk-network
+
+  # Backend service  
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mongo
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/
+      - MONGO_DB=brk_sneakers
+      - DEBUG=True
+    networks:
+      - brk-network
+
+  # MongoDB service
+  mongo:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+      - ./mongo-backup/brk_sneakers:/docker-entrypoint-initdb.d/brk_sneakers:ro
+      - ./mongodb/restore-data.sh:/docker-entrypoint-initdb.d/01-restore-data.sh:ro
+      - ./mongodb/import-data.js:/docker-entrypoint-initdb.d/02-prepare-db.js:ro
+    networks:
+      - brk-network
+
+networks:
+  brk-network:
+    driver: bridge
+
+volumes:
+  mongo-data:

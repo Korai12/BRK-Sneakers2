@@ -93,6 +93,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
 // Function to send like request to API and update UI in main.js
 function likeProduct(productId) {
+    
+
+
     // First, handle all instances of this product on the page
     const productCards = document.querySelectorAll(`.product-card[data-product-id="${productId}"]`);
     
@@ -1432,3 +1435,48 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
+// Enhanced like tracking system
+function checkIfProductLiked(productId) {
+    // Check if user is logged in
+    const userData = window.profileUtils ? window.profileUtils.getUserData() : null;
+    
+    if (userData) {
+        // For logged-in users: check user-specific liked products
+        const userLikedProducts = JSON.parse(localStorage.getItem('brkLikedProducts')) || {};
+        const userLikes = userLikedProducts[userData.id] || [];
+        return userLikes.includes(productId);
+    } else {
+        // For guests: check session-based liked products
+        const guestLikes = JSON.parse(sessionStorage.getItem('brkGuestLikes')) || [];
+        return guestLikes.includes(productId);
+    }
+}
+
+function trackLikedProduct(productId) {
+    const userData = window.profileUtils ? window.profileUtils.getUserData() : null;
+    
+    if (userData) {
+        // For logged-in users: store in localStorage with user ID
+        const userLikedProducts = JSON.parse(localStorage.getItem('brkLikedProducts')) || {};
+        const userLikes = userLikedProducts[userData.id] || [];
+        
+        if (!userLikes.includes(productId)) {
+            userLikes.push(productId);
+            userLikedProducts[userData.id] = userLikes;
+            localStorage.setItem('brkLikedProducts', JSON.stringify(userLikedProducts));
+            return true; // Successfully liked
+        }
+    } else {
+        // For guests: store in sessionStorage for current session
+        const guestLikes = JSON.parse(sessionStorage.getItem('brkGuestLikes')) || [];
+        
+        if (!guestLikes.includes(productId)) {
+            guestLikes.push(productId);
+            sessionStorage.setItem('brkGuestLikes', JSON.stringify(guestLikes));
+            return true; // Successfully liked
+        }
+    }
+    
+    return false; // Already liked
+}

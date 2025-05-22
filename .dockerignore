@@ -1,0 +1,7 @@
+**/__pycache__
+**/.DS_Store
+**/.venv
+**/.git
+**/.idea
+**/.vscode
+node_modules
