@@ -254,6 +254,8 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Make the product cards clickable
         makeProductCardsClickable();
+
+        
     }
     
     // Function to add event listeners to a product card
@@ -315,80 +317,11 @@ document.addEventListener('DOMContentLoaded', function() {
         productsContainer.appendChild(errorMessage);
     }
     
-    // Function to send like request to API and update UI
- function likeProduct(productId) {
-    // First, log what product we're trying to like
+ // Function to send like request to API and update UI in products.js
+function likeProduct(productId) {
     console.log("Liking product:", productId);
     
-    // Find the product card
-    const productCard = document.querySelector(`.product-card[data-product-id="${productId}"]`);
-    if (!productCard) {
-        console.error('Product card not found for ID:', productId);
-        return;
-    }
-    
-    // Find the product rating container
-    const ratingContainer = productCard.querySelector('.product-rating');
-    if (!ratingContainer) {
-        console.error('Rating container not found in product card');
-        return;
-    }
-    
-    // Log what we found in the rating container for debugging
-    console.log("Rating container content:", ratingContainer.innerHTML);
-    
-    // Get all spans in the rating container
-    const spans = ratingContainer.querySelectorAll('span');
-    if (spans.length === 0) {
-        console.error('No spans found in rating container');
-        return;
-    }
-    
-    // Look specifically for the span containing likes (the one with a number in parentheses)
-    let likesSpan = null;
-    let currentLikes = 0;
-    
-    for (const span of spans) {
-        console.log("Checking span content:", span.textContent);
-        
-        // Try to find a number in parentheses
-        const likesMatch = span.textContent.match(/\((\d+)\)/);
-        if (likesMatch) {
-            likesSpan = span;
-            currentLikes = parseInt(likesMatch[1]);
-            console.log("Found likes span with count:", currentLikes);
-            break;
-        }
-        
-        // Also check for template literal syntax that wasn't processed
-        if (span.textContent.includes('${product.likes')) {
-            likesSpan = span;
-            currentLikes = 0; // Default to 0 if we find the template literal
-            console.log("Found unprocessed template literal in span");
-            break;
-        }
-    }
-    
-    if (!likesSpan) {
-        console.error('Could not identify the likes span');
-        return;
-    }
-    
-    // Create a new value for the likes span
-    const newLikes = currentLikes + 1;
-    
-    // COMPLETELY REPLACE the span's content with the new like count
-    likesSpan.textContent = `(${newLikes})`;
-    console.log("Updated likes span to:", likesSpan.textContent);
-    
-    // Make sure the heart icon is filled
-    const heartIcon = productCard.querySelector('.like-button i');
-    if (heartIcon) {
-        heartIcon.classList.remove('far');
-        heartIcon.classList.add('fas', 'liked');
-    }
-    
-    // Then send the API request
+    // Send API request
     fetch('/api/like', {
         method: 'POST',
         headers: {
@@ -405,23 +338,47 @@ document.addEventListener('DOMContentLoaded', function() {
     .then(data => {
         console.log('API response:', data);
         
-        // If the server returns a different count, update the UI
-        if (data.likes !== undefined && data.likes !== newLikes) {
-            console.log(`Server returned different like count (${data.likes}), updating UI`);
-            likesSpan.textContent = `(${data.likes})`;
+        // IMPORTANT: Update the correct element for likes
+        const productCard = document.querySelector(`.product-card[data-product-id="${productId}"]`);
+        if (productCard) {
+            // Update like button
+            const likeButton = productCard.querySelector('.like-button');
+            if (likeButton) {
+                likeButton.style.pointerEvents = 'none';
+                likeButton.style.opacity = '0.6';
+                likeButton.disabled = true;
+                
+                // Update heart icon
+                const heartIcon = likeButton.querySelector('i');
+                if (heartIcon) {
+                    heartIcon.classList.remove('far');
+                    heartIcon.classList.add('fas', 'liked');
+                }
+            }
+            
+            // IMPORTANT: Make sure we're updating the correct element
+            // This should be inside the .product-rating div, not near the price
+            const ratingContainer = productCard.querySelector('.product-rating');
+            if (ratingContainer) {
+                const likesSpan = ratingContainer.querySelector('span:last-child');
+                if (likesSpan) {
+                    likesSpan.textContent = `(${data.likes})`;
+                    
+                    // Also update the stars if needed
+                    const starsContainer = ratingContainer.querySelector('.stars-container');
+                    if (starsContainer) {
+                        const starRating = calculateStarRating(data.likes);
+                        updateStarsDisplay(starsContainer, starRating);
+                    }
+                }
+            }
         }
+        
+        showNotification('Thank you for liking this product!', 'success');
     })
     .catch(error => {
         console.error('API error:', error);
-        
-        // Revert to the original like count on error
-        likesSpan.textContent = `(${currentLikes})`;
-        
-        // Revert the heart icon
-        if (heartIcon) {
-            heartIcon.classList.add('far');
-            heartIcon.classList.remove('fas', 'liked');
-        }
+        showNotification('Failed to like product. Please try again.', 'error');
     });
 }
     
@@ -713,21 +670,21 @@ function updateStarsDisplay(container, rating) {
 }
 
 /**
- * Calculate star rating based on likes
+ * Calculate star rating based on likes - SIMPLIFIED VERSION
+ * 1 like = 1 star (starting point)
+ * Every 3 likes adds 0.5 stars
+ * 30+ likes = full 5 stars
  * @param {number} likes - Number of product likes
  * @returns {number} Star rating from 0-5
  */
 function calculateStarRating(likes) {
-    // Calculate a score from 0-5 based on likes
-    if (likes === 0) {
-        return 0;
-    } else if (likes <= 5) {
-        return 2.5 + (likes * 0.3); // Start at 2.5 stars for at least 1 like
-    } else if (likes <= 20) {
-        return 4 + ((likes - 5) * 0.05); // Gradually increase to 5 stars
-    } else {
-        return 5; // Max rating for 20+ likes
-    }
+    if (likes === 0) return 0;
+    if (likes >= 30) return 5;
+    
+    // Start with 1 star, add 0.5 for every 3 likes
+    const rating = 1 + Math.floor(likes / 3) * 0.5;
+    
+    return Math.min(5, rating);
 }
 
 // In products.js file

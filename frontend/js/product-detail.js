@@ -1268,24 +1268,12 @@ function displayRecentlyViewedProducts(products) {
  * @returns {string} HTML string with star icons
  */
 function createStarsHTML(likes) {
-    // Calculate star rating based on likes (0-5 scale)
-    let stars = 0;
-    if (likes === 0) {
-        stars = 3; // Default 3 stars for products with no likes
-    } else if (likes <= 5) {
-        stars = 3.5 + (likes * 0.1); // Start at 3.5 stars, up to 4 stars
-    } else if (likes <= 20) {
-        stars = 4 + ((likes - 5) * 0.05); // 4 to 4.75 stars
-    } else {
-        stars = 5; // 5 stars for 20+ likes
-    }
-    
-    // Cap at 5 stars
-    stars = Math.min(5, stars);
+    // Use the standardized calculation
+    const stars = calculateStarRating(likes);
     
     // Create HTML for stars
     const fullStars = Math.floor(stars);
-    const hasHalfStar = stars % 1 >= 0.5;
+    const hasHalfStar = stars % 1 >= 0.3 && stars % 1 <= 0.7;
     const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
     
     let starsHTML = '';
@@ -1352,29 +1340,21 @@ function makeProductCardsClickable(cards) {
 }
 
 /**
- * Calculate star rating based on likes
+ * Calculate star rating based on likes - SIMPLIFIED VERSION
+ * 1 like = 1 star (starting point)
+ * Every 3 likes adds 0.5 stars
+ * 30+ likes = full 5 stars
  * @param {number} likes - Number of product likes
  * @returns {number} Star rating from 0-5
  */
 function calculateStarRating(likes) {
-    // Use the same logic as in updateProductRating function
-    const MAX_STARS = 5;
-    let starRating = 0;
+    if (likes === 0) return 0;
+    if (likes >= 30) return 5;
     
-    // Calculate a score from 0-5 based on likes
-    if (likes === 0) {
-        starRating = 0;
-    } else if (likes <= 5) {
-        starRating = 2.5 + (likes * 0.3); // Start at 2.5 stars for at least 1 like
-    } else if (likes <= 20) {
-        starRating = 4 + ((likes - 5) * 0.05); // Gradually increase to 5 stars
-    } else {
-        starRating = 5; // Max rating for 20+ likes
-    }
+    // Start with 1 star, add 0.5 for every 3 likes
+    const rating = 1 + Math.floor(likes / 3) * 0.5;
     
-    starRating = Math.min(5, Math.max(0, starRating)); // Keep between 0 and 5
-    
-    return starRating;
+    return Math.min(5, rating);
 }
 
 /**

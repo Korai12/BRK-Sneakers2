@@ -46,6 +46,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Run when page loads
     updateActiveNavLink();
 
+     setTimeout(initializeAlreadyLikedProducts, 500);
+
 
 
     // Fix any JavaScript syntax errors in hardcoded products first
@@ -91,84 +93,11 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-// Function to send like request to API and update UI in main.js
+// Function to send like request to API and update UI with ONE-LIKE POLICY
 function likeProduct(productId) {
+    console.log("Liking product:", productId);
     
-
-
-    // First, handle all instances of this product on the page
-    const productCards = document.querySelectorAll(`.product-card[data-product-id="${productId}"]`);
-    
-    if (productCards.length === 0) {
-        console.error('No product cards found for ID:', productId);
-        return;
-    }
-    
-    // Track the current likes for API request
-    let currentLikes = 0;
-    
-    // Update each product card
-    productCards.forEach(productCard => {
-        // Find the product rating container
-        const ratingContainer = productCard.querySelector('.product-rating');
-        if (!ratingContainer) {
-            console.error('Rating container not found in product card');
-            return;
-        }
-        
-        // Get all spans in the rating container
-        const spans = ratingContainer.querySelectorAll('span');
-        if (spans.length === 0) {
-            console.error('No spans found in rating container');
-            return;
-        }
-        
-        // Look specifically for the span containing likes (the one with a number in parentheses)
-        let likesSpan = null;
-        let cardLikes = 0;
-        
-        for (const span of spans) {
-            // Try to find a number in parentheses
-            const likesMatch = span.textContent.match(/\((\d+)\)/);
-            if (likesMatch) {
-                likesSpan = span;
-                cardLikes = parseInt(likesMatch[1]);
-                // Store this for the API request
-                currentLikes = cardLikes;
-                break;
-            }
-            
-            // Also check for template literal syntax that wasn't processed
-            if (span.textContent.includes('${product.likes')) {
-                likesSpan = span;
-                cardLikes = 0; // Default to 0 if we find the template literal
-                break;
-            }
-        }
-        
-        if (!likesSpan) {
-            console.error('Could not identify the likes span');
-            return;
-        }
-        
-        // Create a new value for the likes span
-        const newLikes = cardLikes + 1;
-        
-        // COMPLETELY REPLACE the span's content with the new like count
-        likesSpan.textContent = `(${newLikes})`;
-        
-        // Make sure the heart icon is filled
-        const heartIcon = productCard.querySelector('.like-button i');
-        if (heartIcon) {
-            heartIcon.classList.remove('far');
-            heartIcon.classList.add('fas', 'liked');
-        }
-    });
-    
-    // Also update any slides in the slideshow that might show this product
-    updateSlideshowLikes(productId, currentLikes + 1);
-    
-    // Then send the API request
+    // Send API request
     fetch('/api/like', {
         method: 'POST',
         headers: {
@@ -183,135 +112,51 @@ function likeProduct(productId) {
         return response.json();
     })
     .then(data => {
-        // If the server returns a different count, update all UI instances
-        if (data.likes !== undefined && data.likes !== currentLikes + 1) {
-            // Update all product cards again with the correct server value
-            productCards.forEach(productCard => {
-                const ratingContainer = productCard.querySelector('.product-rating');
-                if (!ratingContainer) return;
+        console.log('API response:', data);
+        
+        // IMPORTANT: Update the correct element for likes
+        const productCard = document.querySelector(`.product-card[data-product-id="${productId}"]`);
+        if (productCard) {
+            // Update like button
+            const likeButton = productCard.querySelector('.like-button');
+            if (likeButton) {
+                likeButton.style.pointerEvents = 'none';
+                likeButton.style.opacity = '0.6';
+                likeButton.disabled = true;
                 
-                const spans = ratingContainer.querySelectorAll('span');
-                if (spans.length === 0) return;
-                
-                // Find the likes span again
-                for (const span of spans) {
-                    if (span.textContent.match(/\(\d+\)/) || 
-                        span.textContent.includes('${product.likes')) {
-                        // Update with server value
-                        span.textContent = `(${data.likes})`;
-                        break;
+                // Update heart icon
+                const heartIcon = likeButton.querySelector('i');
+                if (heartIcon) {
+                    heartIcon.classList.remove('far');
+                    heartIcon.classList.add('fas', 'liked');
+                }
+            }
+            
+            // IMPORTANT: Make sure we're updating the correct element
+            // This should be inside the .product-rating div, not near the price
+            const ratingContainer = productCard.querySelector('.product-rating');
+            if (ratingContainer) {
+                const likesSpan = ratingContainer.querySelector('span:last-child');
+                if (likesSpan) {
+                    likesSpan.textContent = `(${data.likes})`;
+                    
+                    // Also update the stars if needed
+                    const starsContainer = ratingContainer.querySelector('.stars-container');
+                    if (starsContainer) {
+                        const starRating = calculateStarRating(data.likes);
+                        updateStarsDisplay(starsContainer, starRating);
                     }
                 }
-            });
-            
-            // Also update slideshow if needed
-            updateSlideshowLikes(productId, data.likes);
+            }
         }
+        
+        showNotification('Thank you for liking this product!', 'success');
     })
     .catch(error => {
         console.error('API error:', error);
-        
-        // Revert all UI changes on error
-        productCards.forEach(productCard => {
-            const ratingContainer = productCard.querySelector('.product-rating');
-            if (!ratingContainer) return;
-            
-            const spans = ratingContainer.querySelectorAll('span');
-            if (spans.length === 0) return;
-            
-            // Find the likes span again
-            for (const span of spans) {
-                if (span.textContent.match(/\(\d+\)/) || 
-                    span.textContent.includes('${product.likes')) {
-                    // Revert to original
-                    span.textContent = `(${currentLikes})`;
-                    break;
-                }
-            }
-            
-            // Revert heart icon
-            const heartIcon = productCard.querySelector('.like-button i');
-            if (heartIcon) {
-                heartIcon.classList.add('far');
-                heartIcon.classList.remove('fas', 'liked');
-            }
-        });
-        
-        // Revert slideshow too
-        updateSlideshowLikes(productId, currentLikes);
+        showNotification('Failed to like product. Please try again.', 'error');
     });
 }
-    
-    // Add to cart functionality
-    // Add to cart functionality
-const addToCartButtons = document.querySelectorAll('.add-to-cart');
-
-addToCartButtons.forEach(button => {
-    button.addEventListener('click', function(e) {
-        e.preventDefault();
-        e.stopPropagation(); // Prevent card click
-        
-        // Get the product card
-        const productCard = this.closest('.product-card');
-        if (!productCard) return;
-        
-        // Get product information
-        const productId = productCard.getAttribute('data-product-id');
-        const productName = productCard.querySelector('h3').textContent;
-        const productImageElement = productCard.querySelector('.product-image img');
-        const productImage = productImageElement ? productImageElement.src : '';
-        
-        // Get price (remove currency symbol and convert to number)
-        const priceElement = productCard.querySelector('.product-price');
-        let productPrice = 0;
-        if (priceElement) {
-            const priceText = priceElement.textContent;
-            // Extract numeric part of price, handling various currency formats
-            const priceMatch = priceText.match(/[\d.]+/);
-            if (priceMatch) {
-                productPrice = parseFloat(priceMatch[0]);
-            }
-        }
-        
-        // Create cart item
-        const cartItem = {
-            id: productId,
-            name: productName,
-            price: productPrice,
-            image: productImage,
-            size: '41', // Default size
-            quantity: 1
-        };
-        
-        // Get existing cart or initialize empty cart
-        let cart = JSON.parse(localStorage.getItem('brkCart')) || [];
-        
-        // Check if item already exists
-        const existingItemIndex = cart.findIndex(item => item.id === cartItem.id);
-        
-        if (existingItemIndex > -1) {
-            // Increment quantity if item exists
-            cart[existingItemIndex].quantity++;
-        } else {
-            // Add new item
-            cart.push(cartItem);
-        }
-        
-        // Save cart to localStorage
-        localStorage.setItem('brkCart', JSON.stringify(cart));
-        
-        // Update cart count
-        const cartCount = document.querySelector('.cart-count');
-        if (cartCount) {
-            let currentCount = parseInt(cartCount.textContent) || 0;
-            currentCount++;
-            cartCount.textContent = currentCount;
-        }
-        
-        // Show message
-        showAddedToCartMessage();
-    });
-});
     
     // Function to show "Added to cart" message
     function showAddedToCartMessage() {
@@ -949,21 +794,21 @@ function updateStarsDisplay(container, rating) {
 }
 
 /**
- * Calculate star rating based on likes
+ * Calculate star rating based on likes - SIMPLIFIED VERSION
+ * 1 like = 1 star (starting point)
+ * Every 3 likes adds 0.5 stars
+ * 30+ likes = full 5 stars
  * @param {number} likes - Number of product likes
  * @returns {number} Star rating from 0-5
  */
 function calculateStarRating(likes) {
-    // Calculate a score from 0-5 based on likes
-    if (likes === 0) {
-        return 0;
-    } else if (likes <= 5) {
-        return 2.5 + (likes * 0.3); // Start at 2.5 stars for at least 1 like
-    } else if (likes <= 20) {
-        return 4 + ((likes - 5) * 0.05); // Gradually increase to 5 stars
-    } else {
-        return 5; // Max rating for 20+ likes
-    }
+    if (likes === 0) return 0;
+    if (likes >= 30) return 5;
+    
+    // Start with 1 star, add 0.5 for every 3 likes
+    const rating = 1 + Math.floor(likes / 3) * 0.5;
+    
+    return Math.min(5, rating);
 }
 
 /**
@@ -1480,3 +1325,38 @@ function trackLikedProduct(productId) {
     
     return false; // Already liked
 }
+
+/**
+ * Initialize already-liked products on page load
+ * This function should be called after products are loaded to mark already-liked ones
+ */
+function initializeAlreadyLikedProducts() {
+    const likedProducts = JSON.parse(localStorage.getItem('brkLikedProducts')) || [];
+    
+    if (likedProducts.length === 0) return;
+    
+    // Find all product cards and check if they're already liked
+    const productCards = document.querySelectorAll('.product-card');
+    
+    productCards.forEach(productCard => {
+        const productId = productCard.getAttribute('data-product-id');
+        
+        if (likedProducts.includes(productId)) {
+            // Disable the like button
+            const likeButton = productCard.querySelector('.like-button');
+            if (likeButton) {
+                likeButton.style.pointerEvents = 'none';
+                likeButton.style.opacity = '0.6';
+                likeButton.disabled = true;
+                
+                // Make heart icon filled
+                const heartIcon = likeButton.querySelector('i');
+                if (heartIcon) {
+                    heartIcon.classList.remove('far');
+                    heartIcon.classList.add('fas', 'liked');
+                }
+            }
+        }
+    });
+}
+

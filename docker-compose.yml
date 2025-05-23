@@ -36,9 +36,7 @@ services:
       - "27017:27017"
     volumes:
       - mongo-data:/data/db
-      - ./mongo-backup/brk_sneakers:/docker-entrypoint-initdb.d/brk_sneakers:ro
-      - ./mongodb/restore-data.sh:/docker-entrypoint-initdb.d/01-restore-data.sh:ro
-      - ./mongodb/import-data.js:/docker-entrypoint-initdb.d/02-prepare-db.js:ro
+      - ./mongodb/seed_init.js:/docker-entrypoint-initdb.d/seed_init.js:ro
     networks:
       - brk-network
 
@@ -48,3 +46,4 @@ networks:
 
 volumes:
   mongo-data:
+    
