@@ -1,0 +1,177 @@
+[
+  {
+    "test": "System Info",
+    "status": "INFO",
+    "message": "Operating System: Windows 10",
+    "details": null,
+    "timestamp": "19:10:29"
+  },
+  {
+    "test": "System Info",
+    "status": "INFO",
+    "message": "Python Version: 3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]",
+    "details": null,
+    "timestamp": "19:10:29"
+  },
+  {
+    "test": "MongoDB Installation",
+    "status": "PASS",
+    "message": "MongoDB found: db version v8.0.9",
+    "details": null,
+    "timestamp": "19:10:30"
+  },
+  {
+    "test": "MongoDB Service",
+    "status": "PASS",
+    "message": "MongoDB is listening on port 27017",
+    "details": null,
+    "timestamp": "19:10:30"
+  },
+  {
+    "test": "Database Connection",
+    "status": "PASS",
+    "message": "Successfully connected to mongodb://localhost:27017/",
+    "details": null,
+    "timestamp": "19:10:30"
+  },
+  {
+    "test": "MongoDB Version",
+    "status": "INFO",
+    "message": "Server version: 8.0.9",
+    "details": null,
+    "timestamp": "19:10:30"
+  },
+  {
+    "test": "Database Existence",
+    "status": "PASS",
+    "message": "Database 'brk_sneakers' exists",
+    "details": null,
+    "timestamp": "19:10:30"
+  },
+  {
+    "test": "Collection Existence",
+    "status": "PASS",
+    "message": "Collection 'products' exists",
+    "details": null,
+    "timestamp": "19:10:30"
+  },
+  {
+    "test": "Data Count",
+    "status": "PASS",
+    "message": "Found 20 documents in collection",
+    "details": null,
+    "timestamp": "19:10:30"
+  },
+  {
+    "test": "Data Structure",
+    "status": "PASS",
+    "message": "All required fields present in sample document",
+    "details": null,
+    "timestamp": "19:10:30"
+  },
+  {
+    "test": "Sample Document",
+    "status": "INFO",
+    "message": "Fields: ['_id', 'name', 'description', 'price', 'currency', 'image', 'photos', 'category', 'likes', 'sizes', 'tags']",
+    "details": null,
+    "timestamp": "19:10:30"
+  },
+  {
+    "test": "Sample Data",
+    "status": "INFO",
+    "message": "Showing 3 sample products:",
+    "details": null,
+    "timestamp": "19:10:30"
+  },
+  {
+    "test": "Aggregation",
+    "status": "PASS",
+    "message": "Popular products aggregation returned 5 results",
+    "details": null,
+    "timestamp": "19:10:30"
+  },
+  {
+    "test": "Popular Products",
+    "status": "INFO",
+    "message": "Top 5 most liked products",
+    "details": [
+      "Top products by likes:",
+      "  BRK Basketball Pro: 35 likes",
+      "  BRK Pro Athletic: 32 likes",
+      "  BRK Speed Lite: 30 likes",
+      "  BRK Trail Master: 28 likes",
+      "  BRK Winter Boot: 27 likes"
+    ],
+    "timestamp": "19:10:30"
+  },
+  {
+    "test": "Performance",
+    "status": "INFO",
+    "message": "Count query: 0.001s, Find query: 0.000s",
+    "details": null,
+    "timestamp": "19:10:30"
+  },
+  {
+    "test": "Performance",
+    "status": "PASS",
+    "message": "Query performance looks good",
+    "details": null,
+    "timestamp": "19:10:30"
+  },
+  {
+    "test": "Indexes",
+    "status": "INFO",
+    "message": "Found 2 indexes: ['_id_', 'name_text']",
+    "details": null,
+    "timestamp": "19:10:30"
+  },
+  {
+    "test": "Text Index",
+    "status": "PASS",
+    "message": "Text search index exists",
+    "details": null,
+    "timestamp": "19:10:30"
+  },
+  {
+    "test": "Insert Operation",
+    "status": "PASS",
+    "message": "Successfully inserted test document with ID: 683dccf67eacc314cebf3303",
+    "details": null,
+    "timestamp": "19:10:30"
+  },
+  {
+    "test": "Find Operation",
+    "status": "PASS",
+    "message": "Successfully found inserted document",
+    "details": null,
+    "timestamp": "19:10:30"
+  },
+  {
+    "test": "Update Operation",
+    "status": "PASS",
+    "message": "Successfully updated document",
+    "details": null,
+    "timestamp": "19:10:30"
+  },
+  {
+    "test": "Search Operation",
+    "status": "PASS",
+    "message": "Found 1 documents in search",
+    "details": null,
+    "timestamp": "19:10:30"
+  },
+  {
+    "test": "Cleanup",
+    "status": "PASS",
+    "message": "Test document cleaned up",
+    "details": null,
+    "timestamp": "19:10:30"
+  },
+  {
+    "test": "Text Search",
+    "status": "PASS",
+    "message": "Text search returned 2 results",
+    "details": null,
+    "timestamp": "19:10:30"
+  }
+]
