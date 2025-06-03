@@ -1,17 +1,13 @@
-// MongoDB initialization script for Docker
-print("=== Starting BRK Sneakers Database Initialization ===");
+// Script αρχικοποίησης MongoDB για Docker όπου εκτελείται αυτόματα κατά την εκκίνηση του MongoDB container και δημιουργεί τη βάση δεδομένων εισάγοντας δεδομένα προϊόντων.
 
-// Switch to brk_sneakers database
 db = db.getSiblingDB('brk_sneakers');
 
-// Check if products collection already has data
+
 const existingCount = db.products.countDocuments();
-print(`Current products count: ${existingCount}`);
 
 if (existingCount === 0) {
-    print("Database is empty. Seeding with initial product data...");
-    
-    // Product data - all 20 products from seed_database.py
+
+    // Δεδομένα προϊόντων - όλα τα 20 προϊόντα από το seed_database.py
     const products = [
         {
             "name": "BRK Runner Pro",
@@ -255,17 +251,8 @@ if (existingCount === 0) {
         }
     ];
     
-    // Insert products
     const result = db.products.insertMany(products);
-    print(`Inserted ${result.insertedCount} products successfully!`);
     
-    // Create text index for search functionality
     db.products.createIndex({"name": "text"});
-    print("Created text index for product search");
     
-    print("Database initialization complete!");
-} else {
-    print(`Database already contains ${existingCount} products. Skipping initialization.`);
 }
-
-print("=== BRK Sneakers Database Check Complete ===");

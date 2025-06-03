@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  # Frontend service
+  # Frontend 
   frontend:
     build:
       context: ./frontend
@@ -13,7 +13,7 @@ services:
     networks:
       - brk-network
 
-  # Backend service  
+  # Backend  
   backend:
     build:
       context: ./backend
@@ -29,7 +29,7 @@ services:
     networks:
       - brk-network
 
-  # MongoDB service
+  # MongoDB 
   mongo:
     image: mongo:latest
     ports:

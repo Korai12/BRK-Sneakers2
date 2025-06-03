@@ -1,37 +1,37 @@
-// JavaScript for the products page functionality
+//Οι λειτουργικότιτες της σελίδας προϊόντων,όπως  δυναμική αναζήτηση προϊόντων, φιλτράρισμα, ταξινόμηση, εμφάνιση προϊόντων, λειτουργικότητα like, προσθήκη στο καλάθη κτλ.Συνδέεται με το REST API για ανάκτηση και ενημέρωση προϊόντων.
 document.addEventListener('DOMContentLoaded', function() {
     
-    // Load all products on page load
+    //Φόρτωση όλων των προϊόντων κατά την εκκίνηση
     loadAllProducts();
     
-    // Product search functionality
+    
     const searchInput = document.getElementById('product-search');
     const searchButton = document.getElementById('search-button');
     const productsContainer = document.getElementById('products-container');
     
-    // Filter functionality
+    
     const categoryFilter = document.getElementById('category-filter');
     const priceFilter = document.getElementById('price-filter');
     const sortBy = document.getElementById('sort-by');
     
-    // Function to apply filters
+    //Φίλτρα
     function applyFilters() {
-        // Get filter values
+        
         const category = categoryFilter ? categoryFilter.value : 'all';
         const priceRange = priceFilter ? priceFilter.value : 'all';
         const sortOption = sortBy ? sortBy.value : 'popularity';
         
-        // Construct API URL with filters
+        
         let apiUrl = '/api/products';
         
-        // Add category filter
+        
         if (category !== 'all') {
             apiUrl = `/api/products/category/${category}`;
         }
         
-        // Add sort parameter
+        
         let sortParam = '';
-        let sortOrder = 1; // ascending
+        let sortOrder = 1; 
         
         switch (sortOption) {
             case 'price-low':
@@ -47,18 +47,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 sortOrder = -1;
                 break;
             case 'newest':
-                // For demo purposes, we'll sort by ID which is roughly insertion order
+                
                 sortParam = '_id';
                 sortOrder = -1;
                 break;
         }
         
-        // Add sort parameters to URL
+        
         if (sortParam) {
             apiUrl += `?sort_by=${sortParam}&sort_order=${sortOrder}`;
         }
         
-        // Fetch filtered products
+        
         fetch(apiUrl)
             .then(response => {
                 if (!response.ok) {
@@ -67,12 +67,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 return response.json();
             })
             .then(products => {
-                // Apply price filter on client-side (since the API doesn't support it directly)
+                
                 if (priceRange !== 'all') {
                     products = filterByPrice(products, priceRange);
                 }
                 
-                // Update products display
+                
                 displayProducts(products);
             })
             .catch(error => {
@@ -81,13 +81,14 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     }
 
+
      function setFiltersFromURL() {
         const urlParams = new URLSearchParams(window.location.search);
         const categoryParam = urlParams.get('category');
         
-        // If category parameter exists in URL, set the category filter
+        
         if (categoryParam && categoryFilter) {
-            // Find the option that matches the category
+           
             for (let i = 0; i < categoryFilter.options.length; i++) {
                 if (categoryFilter.options[i].value === categoryParam) {
                     categoryFilter.selectedIndex = i;
@@ -95,15 +96,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
             
-            // After setting the filter, apply it to show filtered products
+           
             applyFilters();
         }
     }
     
-    // Now call setFiltersFromURL after everything is defined
+   
     setFiltersFromURL();
 
-    // Add event listeners to filter controls
+    
     if (categoryFilter) {
         categoryFilter.addEventListener('change', applyFilters);
     }
@@ -117,19 +118,19 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     if (searchInput && searchButton) {
-        // Search when button is clicked
+       
         searchButton.addEventListener('click', function() {
             searchProducts();
         });
         
-        // Search when Enter key is pressed
+       
         searchInput.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 searchProducts();
             }
         });
         
-        // Live search as user types (optional)
+       
         searchInput.addEventListener('input', function() {
             if (this.value.length >= 3 || this.value.length === 0) {
                 searchProducts();
@@ -137,10 +138,11 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
+    //Αναζήτηση προϊόντων
     function searchProducts() {
         const searchTerm = searchInput.value.toLowerCase().trim();
         
-        // Call the API for search
+       
         fetch(`/api/search?query=${encodeURIComponent(searchTerm)}`)
             .then(response => {
                 if (!response.ok) {
@@ -149,17 +151,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 return response.json();
             })
             .then(products => {
-                // Update products display
+                
                 displayProducts(products);
             })
             .catch(error => {
                 console.error('Error searching products:', error);
-                // Show error message
+                
                 displayErrorMessage("There was a problem searching for products. Please try again later.");
             });
     }
     
-    // Load all products initially
+    // Αρχική φόρτωση όλων των προϊόντων
     function loadAllProducts() {
         fetch('/api/products')
             .then(response => {
@@ -169,25 +171,23 @@ document.addEventListener('DOMContentLoaded', function() {
                 return response.json();
             })
             .then(products => {
-                // Update products display
+               
                 displayProducts(products);
             })
             .catch(error => {
-                console.error('Error loading products:', error);
-                // Show error message
                 displayErrorMessage("There was a problem loading products. Please try again later.");
             });
     }
     
-    // Function to display products in the container
+   // Εμφάνιση προϊόντων στο container
     function displayProducts(products) {
         if (!productsContainer) return;
         
-        // Clear existing products
+        
         productsContainer.innerHTML = '';
         
         if (products.length === 0) {
-            // Display no results message
+            
             const noResultsMessage = document.createElement('div');
             noResultsMessage.className = 'no-results-message';
             noResultsMessage.innerHTML = `
@@ -199,7 +199,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             productsContainer.appendChild(noResultsMessage);
             
-            // Add event listener to clear search button
+            
             const clearButton = noResultsMessage.querySelector('.clear-search');
             clearButton.addEventListener('click', function() {
                 searchInput.value = '';
@@ -209,13 +209,13 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         
-        // Display products
+        
         products.forEach(product => {
             const productCard = document.createElement('div');
             productCard.className = 'product-card';
-            productCard.setAttribute('data-product-id', product._id); // Store product ID for like functionality
+            productCard.setAttribute('data-product-id', product._id);
             
-            // Create HTML for product card
+           
             productCard.innerHTML = `
                 <div class="product-image">
                     <img src="images/products/${product.image}" alt="${product.name}">
@@ -241,68 +241,67 @@ document.addEventListener('DOMContentLoaded', function() {
             
             productsContainer.appendChild(productCard);
             
-            // Update stars display for this product
+            
             const starsContainer = productCard.querySelector('.stars-container');
             if (starsContainer) {
                 const starRating = calculateStarRating(product.likes || 0);
                 updateStarsDisplay(starsContainer, starRating);
             }
             
-            // Add event listeners for this card
+            
             addEventListenersToProductCard(productCard, product);
         });
         
-        // Make the product cards clickable
+        
         makeProductCardsClickable();
 
         
     }
     
-    // Function to add event listeners to a product card
+    // Προσθήκη event listeners σε κάθε προϊόν
     function addEventListenersToProductCard(productCard, product) {
-        // Add event listener for like button
+    
         const likeButton = productCard.querySelector('.like-button');
         if (likeButton) {
             likeButton.addEventListener('click', function(e) {
-                e.stopPropagation(); // Prevent card click
-                // Toggle heart icon
+                e.stopPropagation(); 
+                
                 const heartIcon = this.querySelector('i');
                 heartIcon.classList.toggle('far');
                 heartIcon.classList.toggle('fas');
                 heartIcon.classList.toggle('liked');
                 
-                // Send like request to API
+               
                 likeProduct(product._id);
             });
         }
         
-        // Add event listener for quick view button
+       
         const quickViewButton = productCard.querySelector('.quick-view');
         if (quickViewButton) {
             quickViewButton.addEventListener('click', function(e) {
                 e.preventDefault();
-                e.stopPropagation(); // Prevent card click
-                
-                // Get product information
+                e.stopPropagation(); 
+
                 const productImage = productCard.querySelector('.product-image img').src;
                 const productName = productCard.querySelector('h3').textContent;
                 
-                // Show image modal
+                
                 showImageModal(productImage, productName);
             });
         }
         
-        // Add event listener for add to cart button
+       
         const addToCartButton = productCard.querySelector('.add-to-cart');
         if (addToCartButton) {
             addToCartButton.addEventListener('click', function(e) {
-                e.stopPropagation(); // Prevent card click
+                e.stopPropagation(); 
                 addToCart(product);
             });
         }
     }
     
-    // Function to display error message
+    //Εμφάνιση μηνύματος σφάλματος
     function displayErrorMessage(message) {
         if (!productsContainer) return;
         
@@ -317,11 +316,11 @@ document.addEventListener('DOMContentLoaded', function() {
         productsContainer.appendChild(errorMessage);
     }
     
- // Function to send like request to API and update UI in products.js
+ //Αποστολή αιτήματος like στο API και ενημέρωση UI στο products
 function likeProduct(productId) {
     console.log("Liking product:", productId);
     
-    // Send API request
+    
     fetch('/api/like', {
         method: 'POST',
         headers: {
@@ -338,17 +337,17 @@ function likeProduct(productId) {
     .then(data => {
         console.log('API response:', data);
         
-        // IMPORTANT: Update the correct element for likes
+       
         const productCard = document.querySelector(`.product-card[data-product-id="${productId}"]`);
         if (productCard) {
-            // Update like button
+            
             const likeButton = productCard.querySelector('.like-button');
             if (likeButton) {
                 likeButton.style.pointerEvents = 'none';
                 likeButton.style.opacity = '0.6';
                 likeButton.disabled = true;
                 
-                // Update heart icon
+                
                 const heartIcon = likeButton.querySelector('i');
                 if (heartIcon) {
                     heartIcon.classList.remove('far');
@@ -356,15 +355,14 @@ function likeProduct(productId) {
                 }
             }
             
-            // IMPORTANT: Make sure we're updating the correct element
-            // This should be inside the .product-rating div, not near the price
+           
             const ratingContainer = productCard.querySelector('.product-rating');
             if (ratingContainer) {
                 const likesSpan = ratingContainer.querySelector('span:last-child');
                 if (likesSpan) {
                     likesSpan.textContent = `(${data.likes})`;
                     
-                    // Also update the stars if needed
+                   
                     const starsContainer = ratingContainer.querySelector('.stars-container');
                     if (starsContainer) {
                         const starRating = calculateStarRating(data.likes);
@@ -382,39 +380,36 @@ function likeProduct(productId) {
     });
 }
     
-    // Function to add product to cart
+    // Προσθήκη προϊόντος στο καλάθι
     function addToCart(product) {
-        // In a real implementation, this would add the product to a cart object or send to backend
-        console.log('Added to cart:', product);
         
-        // Get cart from localStorage or initialize
         let cart = JSON.parse(localStorage.getItem('brkCart')) || [];
         
-        // Create cart item
+        
         const cartItem = {
             id: product._id,
             name: product.name,
             price: product.price,
             image: `images/products/${product.image}`,
-            size: '41', // Default size
+            size: '41', 
             quantity: 1
         };
         
-        // Check if item already exists in cart
+        
         const existingItemIndex = cart.findIndex(item => item.id === cartItem.id);
         
         if (existingItemIndex > -1) {
-            // Update quantity if item exists
+            
             cart[existingItemIndex].quantity++;
         } else {
-            // Add new item
+            
             cart.push(cartItem);
         }
         
-        // Save to localStorage
+       
         localStorage.setItem('brkCart', JSON.stringify(cart));
         
-        // Update cart count
+        
         const cartCount = document.querySelector('.cart-count');
         if (cartCount) {
             let currentCount = parseInt(cartCount.textContent);
@@ -422,18 +417,18 @@ function likeProduct(productId) {
             cartCount.textContent = currentCount;
         }
         
-        // Show success message
+        
         showAddedToCartMessage();
     }
     
-    // Function to show "Added to cart" message
+   //Εμφάνιση μηνύματος προσθήκης στο καλάθι
     function showAddedToCartMessage() {
         const message = document.createElement('div');
         message.className = 'cart-message';
         message.innerHTML = '<i class="fas fa-check"></i> Added to cart!';
         document.body.appendChild(message);
         
-        // Show and hide message with animation
+       
         setTimeout(() => {
             message.classList.add('active');
             
@@ -448,7 +443,7 @@ function likeProduct(productId) {
     
     
     
-    // Function to filter products by price on client-side
+   //Φιλτρα προϊόντων με βάση την τιμή
     function filterByPrice(products, priceRange) {
         return products.filter(product => {
             const price = product.price;
@@ -468,39 +463,39 @@ function likeProduct(productId) {
         });
     }
     
-    // Function to make product cards clickable to navigate to product detail page
+   //Προωθηση στην σελίδα λεπτομερειών προϊόντος όταν κάνω κλικ 
     function makeProductCardsClickable() {
         const productCards = document.querySelectorAll('.product-card');
         
         productCards.forEach(card => {
-            // Get product info
+            
             const productId = card.getAttribute('data-product-id');
             
-            // Make the card clickable (except for buttons)
+            
             card.addEventListener('click', function(e) {
-                // Don't trigger navigation if clicking on buttons within the card
+                
                 if (e.target.closest('.product-actions') || 
                     e.target.tagName === 'BUTTON' || 
                     e.target.closest('button')) {
                     return;
                 }
                 
-                // Navigate to product detail page
+               
                 window.location.href = `product-detail.html?product_id=${productId}`;
             });
             
-            // Add cursor pointer to indicate card is clickable
+           
             card.style.cursor = 'pointer';
         });
     }
     
-    // Function to show image modal with larger product image
+   // Εμφάνιση modal εικόνας προϊόντος
     function showImageModal(imageSrc, productName) {
-        // Create modal element
+       
         const modal = document.createElement('div');
         modal.className = 'image-modal';
         
-        // Create modal content
+       
         modal.innerHTML = `
             <div class="image-modal-content">
                 <span class="close-modal">&times;</span>
@@ -509,28 +504,28 @@ function likeProduct(productId) {
             </div>
         `;
         
-        // Add to document
+       
         document.body.appendChild(modal);
         
-        // Show modal with animation
+        
         setTimeout(() => {
             modal.classList.add('active');
         }, 10);
         
-        // Close modal when X is clicked
+        
         const closeButton = modal.querySelector('.close-modal');
         closeButton.addEventListener('click', function() {
             closeImageModal(modal);
         });
         
-        // Close modal when clicking outside the content
+        
         modal.addEventListener('click', function(e) {
             if (e.target === modal) {
                 closeImageModal(modal);
             }
         });
         
-        // Close modal when ESC key is pressed
+       
         document.addEventListener('keydown', function escFunction(e) {
             if (e.key === 'Escape') {
                 closeImageModal(modal);
@@ -539,7 +534,7 @@ function likeProduct(productId) {
         });
     }
     
-    // Function to close image modal with animation
+   
     function closeImageModal(modal) {
         modal.classList.remove('active');
         setTimeout(() => {
@@ -549,10 +544,10 @@ function likeProduct(productId) {
         }, 300);
     }
     
-    // Add CSS for image modal
+    //css για το modal
     function addImageModalStyles() {
         if (document.getElementById('image-modal-styles')) {
-            return; // Styles already added
+            return; 
         }
         
         const style = document.createElement('style');
@@ -628,23 +623,19 @@ function likeProduct(productId) {
         document.head.appendChild(style);
     }
     
-    // Add image modal styles
+    
     addImageModalStyles();
     updateAllProductRatings();
 });
 
-/**
- * Update stars display based on rating
- * @param {HTMLElement} container - Container element for stars
- * @param {number} rating - Rating value (0-5)
- */
+//Ενημερωση της εμφάνισης των αστεριών 
 function updateStarsDisplay(container, rating) {
     if (!container) return;
     
-    // Clear existing stars
+    
     container.innerHTML = '';
     
-    // Add full stars
+   
     const fullStars = Math.floor(rating);
     for (let i = 0; i < fullStars; i++) {
         const star = document.createElement('i');
@@ -652,7 +643,7 @@ function updateStarsDisplay(container, rating) {
         container.appendChild(star);
     }
     
-    // Add half star if needed
+   
     const hasHalfStar = rating % 1 >= 0.3 && rating % 1 <= 0.7;
     if (hasHalfStar) {
         const halfStar = document.createElement('i');
@@ -660,7 +651,7 @@ function updateStarsDisplay(container, rating) {
         container.appendChild(halfStar);
     }
     
-    // Add empty stars
+    
     const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
     for (let i = 0; i < emptyStars; i++) {
         const emptyStar = document.createElement('i');
@@ -669,55 +660,48 @@ function updateStarsDisplay(container, rating) {
     }
 }
 
-/**
- * Calculate star rating based on likes - SIMPLIFIED VERSION
- * 1 like = 1 star (starting point)
- * Every 3 likes adds 0.5 stars
- * 30+ likes = full 5 stars
- * @param {number} likes - Number of product likes
- * @returns {number} Star rating from 0-5
- */
+// Υπολογισμός των αστεριών με βάση τα likes
 function calculateStarRating(likes) {
     if (likes === 0) return 0;
     if (likes >= 30) return 5;
     
-    // Start with 1 star, add 0.5 for every 3 likes
+    
     const rating = 1 + Math.floor(likes / 3) * 0.5;
     
     return Math.min(5, rating);
 }
 
-// In products.js file
+// Ενημέρωση όλων των προϊόντων στο products με βάση τα likes 
 function updateAllProductRatings() {
-    // Find all product rating containers
+   
     const ratingContainers = document.querySelectorAll('.product-rating');
     
     ratingContainers.forEach(container => {
-        // Find the likes count from the span
+       
         const likesSpan = container.querySelector('span');
         if (!likesSpan) return;
         
-        // Extract likes count from the span text, e.g. "(24)" -> 24
+        
         const likesMatch = likesSpan.textContent.match(/\((\d+)\)/);
         if (!likesMatch) return;
         
         const likes = parseInt(likesMatch[1]);
         
-        // Create a new container for stars
+        
         const starsContainer = document.createElement('span');
         starsContainer.className = 'stars-container';
         
-        // Insert the stars container before the likes span
+       
         container.insertBefore(starsContainer, likesSpan);
         
-        // Remove the old star icons (all i elements)
+       
         const oldStars = container.querySelectorAll('i.fa-star, i.fa-star-half-alt');
         oldStars.forEach(star => star.remove());
         
-        // Calculate star rating based on likes
+      
         const starRating = calculateStarRating(likes);
         
-        // Update the stars display
+        
         updateStarsDisplay(starsContainer, starRating);
     });
 }

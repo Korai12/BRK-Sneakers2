@@ -1,9 +1,9 @@
+# Υλοποιεί το REST API με όλα τα απαιτούμενα endpoints και διαχειρίζει την επικοινωνία με τη MongoDB και εξυπηρετεί το frontend.
 from flask import Flask, Response, request, send_from_directory
-# Fix for the flask_cors import
+
 try:
     from flask_cors import CORS
 except ImportError:
-    # If flask_cors is not available, use a placeholder
     class CORS:
         def __init__(self, app, **kwargs):
             print("Warning: flask_cors is not installed. CORS will not be enabled.")
@@ -11,19 +11,18 @@ except ImportError:
 
 import json
 import os
-from bson.objectid import ObjectId  # Updated import
+from bson.objectid import ObjectId  
 from pymongo import MongoClient
 
-# MongoDB connection with correct port
+
 import os
 mongo_uri = os.environ.get('MONGO_URI', 'mongodb://localhost:27017/')
 client = MongoClient(mongo_uri)
 db = client['brk_sneakers']
 products_collection = db['products']
 
-# Helper function to manually convert MongoDB documents to dictionaries
+# Μετατρέπει τα έγγραφα της MongoDB σε μορφή συμβατή με JSON.
 def make_json_serializable(obj):
-    """Make a document JSON serializable by converting ObjectIds to strings"""
     if isinstance(obj, dict):
         return {k: make_json_serializable(v) for k, v in obj.items()}
     elif isinstance(obj, list):
@@ -33,18 +32,17 @@ def make_json_serializable(obj):
     else:
         return obj
 
-# Initialize Flask app
+# Δημιουργεί το Flask app και ρυθμίζει τον φάκελο για τα στατικά αρχεία.
 app = Flask(__name__, static_folder='../frontend')
 
-# Enable CORS
 CORS(app)
 
-# Serve frontend files
+
 @app.route('/')
 def serve_index():
     return send_from_directory(app.static_folder, 'index.html')
 
-# Serve static assets
+
 @app.route('/<path:path>')
 def serve_static(path):
     if os.path.exists(os.path.join(app.static_folder, path)):
@@ -52,25 +50,25 @@ def serve_static(path):
     else:
         return send_from_directory(app.static_folder, 'index.html')
 
-# API Routes - note we're using Response directly, not jsonify
+# API Endpoints
 @app.route('/api/search', methods=['GET'])
 def search_products():
     try:
         query = request.args.get('query', '')
         
         if not query:
-            # Return all products sorted by price if no query provided
+            # Επιστρεφει όλα τα προϊόντα ταξινομημένα κατά τιμή αν δεν δόθηκε query
             cursor = products_collection.find().sort('price', 1)
         else:
-            # Search by name (case-insensitive)
+            # Αναζήτηση κατά όνομα
             cursor = products_collection.find(
                 {'name': {'$regex': query, '$options': 'i'}}
             ).sort('price', 1)
         
-        # Convert MongoDB documents to JSON-serializable dictionaries
+    
         products = [make_json_serializable(product) for product in cursor]
         
-        # Return a manually created JSON response
+        # Επιστρέφει τα αποτελέσματα ως JSON
         return Response(
             json.dumps(products), 
             mimetype='application/json'
@@ -96,7 +94,7 @@ def like_product():
                 status=400
             )
         
-        # Update the product's likes count
+        
         result = products_collection.update_one(
             {'_id': ObjectId(product_id)},
             {'$inc': {'likes': 1}}
@@ -109,10 +107,10 @@ def like_product():
                 status=404
             )
         
-        # Get the updated product
+        # Getter του ενημερωμένου προϊόντος
         product = products_collection.find_one({'_id': ObjectId(product_id)})
         
-        # Convert to serializable dictionary
+        # Μετατροπή του προϊόντος σε JSON συμβατό με το API
         product_dict = make_json_serializable(product)
         
         return Response(
@@ -132,7 +130,7 @@ def get_popular_products():
     try:
         cursor = products_collection.find().sort('likes', -1).limit(5)
         
-        # Convert to serializable dictionaries
+        
         products = [make_json_serializable(product) for product in cursor]
         
         return Response(
@@ -153,13 +151,13 @@ def get_all_products():
         sort_by = request.args.get('sort_by', 'price')
         sort_order = int(request.args.get('sort_order', 1))
         
-        # Get cursor from MongoDB
+        
         cursor = products_collection.find().sort(sort_by, sort_order)
         
-        # Convert to serializable dictionaries
+
         products = [make_json_serializable(product) for product in cursor]
         
-        # Return a direct JSON response
+        
         return Response(
             json.dumps(products),
             mimetype='application/json'
@@ -184,7 +182,7 @@ def get_product(product_id):
                 status=404
             )
         
-        # Convert to serializable dictionary
+        
         product_dict = make_json_serializable(product)
         
         return Response(
@@ -204,14 +202,14 @@ def get_products_by_category(category):
     try:
         limit = request.args.get('limit')
         
-        # Modified query to find products where the category is in the array
+        
         cursor = products_collection.find({"category": category})
         
         if limit:
             limit = int(limit)
             cursor = cursor.limit(limit)
         
-        # Convert to serializable dictionaries
+        
         products = [make_json_serializable(product) for product in cursor]
         
         return Response(
@@ -226,9 +224,9 @@ def get_products_by_category(category):
             status=500
         )
 
-# Run the app
+
 if __name__ == '__main__':
-    # Get configuration from environment variables (for Docker compatibility)
+    # Ρυθμίσεις για το Flask app
     host = os.environ.get('HOST', '0.0.0.0')
     port = int(os.environ.get('PORT', 5000))
     debug = os.environ.get('DEBUG', 'True') == 'True'

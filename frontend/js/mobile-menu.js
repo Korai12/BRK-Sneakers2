@@ -1,42 +1,42 @@
-// Mobile Menu Functionality - Final Fixed Version
+// Διαχειρίζεται το μενού για μικρές οθόνες
 document.addEventListener('DOMContentLoaded', function() {
-    // Get elements
+   
     const mobileMenuBtn = document.querySelector('.mobile-menu-button');
     let mobileNav = null;
     
-    // Check if mobile menu button exists
+   
     if (mobileMenuBtn) {
-        // Add click event to mobile menu button
+       
         mobileMenuBtn.addEventListener('click', function(e) {
-            e.stopPropagation(); // Stop click from propagating to document
+            e.stopPropagation(); 
             toggleMobileMenu();
         });
     }
     
-    // Function to create mobile navigation
+    
     function createMobileNav() {
-        // Create mobile nav element
+        
         mobileNav = document.createElement('div');
         mobileNav.className = 'mobile-nav';
         
-        // Set up navigation links with correct category parameters
+        
         let mobileNavHTML = '<ul>';
         
-        // Home link
+        // Link αρχικής σελίδας
         mobileNavHTML += `
             <li>
                 <a href="index.html">Home</a>
             </li>
         `;
         
-        // Products link
+        // Link προϊόντων
         mobileNavHTML += `
             <li>
                 <a href="products.html">All Products</a>
             </li>
         `;
         
-        // Category-specific links
+        // Links συγκεκριμένων κατηγοριών
         mobileNavHTML += `
             <li>
                 <a href="products.html?category=men">Men</a>
@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         mobileNavHTML += '</ul>';
         
-        // Add additional mobile-only links
+        
         mobileNavHTML += `
             <div class="mobile-nav-bottom">
                 <a href="profile.html" class="mobile-nav-link">
@@ -69,21 +69,21 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
         `;
         
-        // Set HTML content
+        
         mobileNav.innerHTML = mobileNavHTML;
         
-        // Add close button
+        
         const closeBtn = document.createElement('button');
         closeBtn.className = 'mobile-menu-close';
         closeBtn.innerHTML = '<i class="fas fa-times"></i>';
         mobileNav.insertBefore(closeBtn, mobileNav.firstChild);
         
         closeBtn.addEventListener('click', function(e) {
-            e.stopPropagation(); // Prevent propagation
+            e.stopPropagation(); 
             closeMobileMenu();
         });
         
-        // Add mobile nav to the DOM after header
+        
         const header = document.querySelector('header');
         if (header) {
             header.parentNode.insertBefore(mobileNav, header.nextSibling);
@@ -91,21 +91,21 @@ document.addEventListener('DOMContentLoaded', function() {
             document.body.appendChild(mobileNav);
         }
         
-        // Add event listeners to mobile nav links
+        
         const mobileNavLinks = mobileNav.querySelectorAll('a');
         mobileNavLinks.forEach(link => {
             link.addEventListener('click', function(e) {
-                // For links that need special handling
+                
                 if (link.classList.contains('support-link')) {
                     e.preventDefault();
                     
-                    // Open the Contact Us modal
+                    
                     const infoModal = document.getElementById('info-modal');
                     const modalContent = document.getElementById('modal-content');
                     
-                    // Check if modal elements exist
+                    
                     if (infoModal && modalContent) {
-                        // Get Contact Us content (same as in main.js)
+                        
                         const contactContent = `
                             <h2>Contact Us</h2>
                             <p>We'd love to hear from you! Get in touch with our team for any questions, feedback, or assistance.</p>
@@ -131,47 +131,47 @@ document.addEventListener('DOMContentLoaded', function() {
                             </form>
                         `;
                         
-                        // Set the modal content
+                        
                         modalContent.innerHTML = contactContent;
                         
-                        // Display the modal
-                        infoModal.style.display = 'block';
-                        document.body.style.overflow = 'hidden'; // Prevent scrolling
                         
-                        // Add event listener for contact form submission
+                        infoModal.style.display = 'block';
+                        document.body.style.overflow = 'hidden'; 
+                        
+                        
                         const contactForm = modalContent.querySelector('.contact-form');
                         if (contactForm) {
                             contactForm.addEventListener('submit', function(event) {
                                 event.preventDefault();
                                 
-                                // Show success notification
+                                
                                 if (typeof showNotification === 'function') {
                                     showNotification('Thank you for your message! We will contact you as soon as possible.', 'success', 4000);
                                 } else {
                                     alert('Thank you for your message! We will contact you as soon as possible.');
                                 }
                                 
-                                // Reset form fields
+                                
                                 this.reset();
                                 
-                                // Close modal after a brief delay
+                                
                                 setTimeout(() => {
                                     infoModal.style.display = 'none';
-                                    document.body.style.overflow = ''; // Re-enable scrolling
+                                    document.body.style.overflow = ''; 
                                 }, 2000);
                             });
                         }
                         
-                        // Make sure modal close functionality works
+                        
                         const closeModalBtn = infoModal.querySelector('.close-modal');
                         if (closeModalBtn) {
                             closeModalBtn.addEventListener('click', function() {
                                 infoModal.style.display = 'none';
-                                document.body.style.overflow = ''; // Re-enable scrolling
+                                document.body.style.overflow = ''; 
                             });
                         }
                     } else {
-                        // Fallback if modal elements don't exist
+                        
                         if (typeof showNotification === 'function') {
                             showNotification('Support is available at support@brksneakers.com', 'info', 4000);
                         } else {
@@ -180,53 +180,51 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 }
                 
-                // Close mobile nav when a link is clicked
+                
                 closeMobileMenu();
             });
         });
         
-        // Important: Stop propagation of clicks within the menu
+        
         mobileNav.addEventListener('click', function(e) {
             e.stopPropagation();
         });
     }
     
-    // Function to toggle mobile navigation
+    // Συνάρτηση για εναλλαγή του mobile menu
     function toggleMobileMenu() {
-        // Check if mobile menu already exists
+       
         if (!mobileNav) {
             createMobileNav();
         }
         
-        // Toggle active class on mobile nav
+        
         mobileNav.classList.toggle('active');
         
-        // Toggle icon on mobile menu button
+        
         if (mobileNav.classList.contains('active')) {
             mobileMenuBtn.innerHTML = '<i class="fas fa-times"></i>';
-            document.body.style.overflow = 'hidden'; // Prevent scrolling when menu is open
+            document.body.style.overflow = 'hidden'; 
         } else {
             mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
-            document.body.style.overflow = ''; // Re-enable scrolling
+            document.body.style.overflow = ''; 
         }
     }
     
-    // Function to close mobile menu
+    // Συνάρτηση για να κλεισει το mobile menu
     function closeMobileMenu() {
         if (mobileNav) {
             mobileNav.classList.remove('active');
             mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
-            document.body.style.overflow = ''; // Re-enable scrolling
+            document.body.style.overflow = '';
         }
     }
     
-    // Create a delay before adding the document click handler
-    // This prevents immediate closing of the menu after opening
+
     setTimeout(function() {
-        // Close menu when clicking outside
+        // Κλείνει το μενού όταν κάνουμε κλικ έξω
         document.addEventListener('click', function(e) {
             if (mobileNav && mobileNav.classList.contains('active')) {
-                // If click is outside the mobile nav and not on the menu button
                 if (!mobileNav.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
                     closeMobileMenu();
                 }
@@ -234,14 +232,14 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }, 100);
     
-    // Close menu with ESC key
+    // Κλείσιμο του mobile menu με το πλήκτρο Escape
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape' && mobileNav && mobileNav.classList.contains('active')) {
             closeMobileMenu();
         }
     });
     
-    // Add CSS for mobile navigation
+    // CSS για το mobile menu
     const mobileStyle = document.createElement('style');
     mobileStyle.textContent = `
         .mobile-nav {

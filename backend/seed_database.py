@@ -1,16 +1,16 @@
 from pymongo import MongoClient
 import os
 
-# MongoDB connection
+
 mongo_uri = os.environ.get('MONGO_URI', 'mongodb://localhost:27017/')
 client = MongoClient(mongo_uri)
 db = client['brk_sneakers']
 products_collection = db['products']
 
-# Clear existing products
+
 products_collection.delete_many({})
 
-# Product data
+
 products = [
     {
         "name": "BRK Runner Pro",
@@ -20,7 +20,7 @@ products = [
         "image": "product1.jpg",
         "photos": ["product1.jpg", "product1-2.jpg"],
         "category": ["sports", "men"],
-        "likes": 24,
+        "likes": 2,
         "sizes": [38, 39, 40, 41, 42, 43, 44],
         "tags": ["running", "performance", "cushioning"]
     },
@@ -32,7 +32,7 @@ products = [
         "image": "product2.jpg",
         "photos": ["product2.jpg"],
         "category": ["casual", "men", "women"],
-        "likes": 18,
+        "likes": 3,
         "sizes": [36, 37, 38, 39, 40, 41, 42, 43, 44],
         "tags": ["casual", "streetwear", "comfort"]
     },
@@ -44,7 +44,7 @@ products = [
         "image": "product3.jpg",
         "photos": ["product3.jpg"],
         "category": ["sports", "men"],
-        "likes": 32,
+        "likes": 0,
         "sizes": [39, 40, 41, 42, 43, 44, 45],
         "tags": ["athletic", "professional", "performance"]
     },
@@ -56,7 +56,7 @@ products = [
         "image": "product4.jpg",
         "photos": ["product4.jpg"],
         "category": ["casual", "men", "women"],
-        "likes": 12,
+        "likes": 0,
         "sizes": [36, 37, 38, 39, 40, 41, 42, 43],
         "tags": ["casual", "slip-on", "comfort"]
     },
@@ -68,7 +68,7 @@ products = [
         "image": "product5.jpg",
         "photos": ["product5.jpg"],
         "category": ["sports", "men", "women"],
-        "likes": 16,
+        "likes": 0,
         "sizes": [37, 38, 39, 40, 41, 42, 43, 44],
         "tags": ["breathable", "lightweight", "summer"]
     },
@@ -80,7 +80,7 @@ products = [
         "image": "product6.jpg",
         "photos": ["product6.jpg"],
         "category": ["sports", "men"],
-        "likes": 28,
+        "likes": 0,
         "sizes": [39, 40, 41, 42, 43, 44, 45],
         "tags": ["trail", "outdoor", "rugged"]
     },
@@ -92,7 +92,7 @@ products = [
         "image": "product7.jpg",
         "photos": ["product7.jpg"],
         "category": ["casual", "men", "women", "kids"],
-        "likes": 20,
+        "likes": 5,
         "sizes": [35, 36, 37, 38, 39, 40, 41, 42, 43, 44],
         "tags": ["canvas", "classic", "versatile"]
     },
@@ -104,7 +104,7 @@ products = [
         "image": "product8.jpg",
         "photos": ["product8.jpg"],
         "category": ["sports", "men", "women"],
-        "likes": 15,
+        "likes": 0,
         "sizes": [36, 37, 38, 39, 40, 41, 42, 43, 44],
         "tags": ["training", "flexible", "gym"]
     },
@@ -116,7 +116,7 @@ products = [
         "image": "product9.jpg",
         "photos": ["product9.jpg"],
         "category": ["kids", "sports"],
-        "likes": 10,
+        "likes": 1,
         "sizes": [28, 29, 30, 31, 32, 33, 34, 35],
         "tags": ["kids", "durable", "comfortable"]
     },
@@ -128,7 +128,7 @@ products = [
         "image": "product10.jpg",
         "photos": ["product10.jpg"],
         "category": ["women", "sports"],
-        "likes": 25,
+        "likes": 0,
         "sizes": [35, 36, 37, 38, 39, 40, 41],
         "tags": ["women", "premium", "athletic"]
     },
@@ -140,7 +140,7 @@ products = [
         "image": "product11.jpg",
         "photos": ["product11.jpg"],
         "category": ["sneakers", "men", "women"],
-        "likes": 22,
+        "likes": 0,
         "sizes": [36, 37, 38, 39, 40, 41, 42, 43, 44],
         "tags": ["retro", "high-top", "vintage"]
     },
@@ -152,7 +152,7 @@ products = [
         "image": "product12.jpg",
         "photos": ["product12.jpg"],
         "category": ["sports", "men"],
-        "likes": 30,
+        "likes": 5,
         "sizes": [39, 40, 41, 42, 43, 44],
         "tags": ["racing", "lightweight", "speed"]
     },
@@ -164,7 +164,7 @@ products = [
         "image": "product13.jpg",
         "photos": ["product13.jpg"],
         "category": ["casual", "men", "women"],
-        "likes": 19,
+        "likes": 0,
         "sizes": [36, 37, 38, 39, 40, 41, 42, 43, 44, 45],
         "tags": ["walking", "comfort", "cushioning"]
     },
@@ -176,7 +176,7 @@ products = [
         "image": "product14.jpg",
         "photos": ["product14.jpg"],
         "category": ["kids", "casual"],
-        "likes": 8,
+        "likes": 0,
         "sizes": [25, 26, 27, 28, 29, 30, 31, 32, 33, 34],
         "tags": ["kids", "canvas", "colorful"]
     },
@@ -188,7 +188,7 @@ products = [
         "image": "product15.jpg",
         "photos": ["product15.jpg"],
         "category": ["sports", "men"],
-        "likes": 35,
+        "likes": 6,
         "sizes": [40, 41, 42, 43, 44, 45, 46],
         "tags": ["basketball", "professional", "support"]
     },
@@ -200,7 +200,7 @@ products = [
         "image": "product16.jpg",
         "photos": ["product16.jpg"],
         "category": ["women", "sports"],
-        "likes": 14,
+        "likes": 0,
         "sizes": [35, 36, 37, 38, 39, 40, 41],
         "tags": ["yoga", "flexible", "minimalist"]
     },
@@ -212,7 +212,7 @@ products = [
         "image": "product17.jpg",
         "photos": ["product17.jpg"],
         "category": ["sneakers", "men", "casual"],
-        "likes": 21,
+        "likes": 0,
         "sizes": [38, 39, 40, 41, 42, 43, 44, 45],
         "tags": ["skate", "durable", "grip"]
     },
@@ -224,7 +224,7 @@ products = [
         "image": "product18.jpg",
         "photos": ["product18.jpg"],
         "category": ["women", "casual"],
-        "likes": 17,
+        "likes": 0,
         "sizes": [35, 36, 37, 38, 39, 40, 41],
         "tags": ["women", "casual", "stylish"]
     },
@@ -236,7 +236,7 @@ products = [
         "image": "product19.jpg",
         "photos": ["product19.jpg"],
         "category": ["sports", "men", "women"],
-        "likes": 23,
+        "likes": 0,
         "sizes": [36, 37, 38, 39, 40, 41, 42, 43, 44],
         "tags": ["tennis", "court", "stability"]
     },
@@ -248,27 +248,15 @@ products = [
         "image": "product20.jpg",
         "photos": ["product20.jpg"],
         "category": ["casual", "men", "women"],
-        "likes": 27,
+        "likes": 0,
         "sizes": [36, 37, 38, 39, 40, 41, 42, 43, 44, 45],
         "tags": ["winter", "warm", "insulated"]
     }
 ]
 
-# Insert products
+
 result = products_collection.insert_many(products)
-print(f"Inserted {len(result.inserted_ids)} products successfully!")
-
-# Create text index for search
 products_collection.create_index([("name", "text")])
-print("Created text index for product search")
-
-# Verify
 count = products_collection.count_documents({})
-print(f"Total products in database: {count}")
 
-# Show a sample product
-sample = products_collection.find_one()
-print(f"\nSample product:")
-print(f"Name: {sample['name']}")
-print(f"Price: {sample['currency']}{sample['price']}")
-print(f"Likes: {sample['likes']}")
+

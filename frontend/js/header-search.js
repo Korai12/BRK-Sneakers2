@@ -1,19 +1,19 @@
-// Header search functionality
+//Αναζητηση προϊόντων στο header(οχι του products page) 
 document.addEventListener('DOMContentLoaded', function() {
-    // Get the search icon in the header
+    
     const searchIcon = document.querySelector('.header-actions .search-icon');
     
     if (searchIcon) {
         searchIcon.addEventListener('click', function(e) {
             e.preventDefault();
             
-            // Check if search overlay already exists
+            
             if (document.querySelector('.search-overlay')) {
                 toggleSearchOverlay();
                 return;
             }
             
-            // Create search overlay
+            
             const searchOverlay = document.createElement('div');
             searchOverlay.className = 'search-overlay';
             searchOverlay.innerHTML = `
@@ -29,27 +29,27 @@ document.addEventListener('DOMContentLoaded', function() {
             
             document.body.appendChild(searchOverlay);
             
-            // Add event listener to close button
+            
             const closeButton = searchOverlay.querySelector('.close-search');
             closeButton.addEventListener('click', toggleSearchOverlay);
             
-            // Focus on the input field
+            
             setTimeout(() => {
                 const input = searchOverlay.querySelector('input');
                 input.focus();
                 
-                // Add active class for animation
+                
                 searchOverlay.classList.add('active');
             }, 10);
             
-            // Close overlay when clicking outside the search container
+            
             searchOverlay.addEventListener('click', function(e) {
                 if (e.target === searchOverlay) {
                     toggleSearchOverlay();
                 }
             });
             
-            // Close overlay when pressing Escape key
+            
             document.addEventListener('keydown', function handleEsc(e) {
                 if (e.key === 'Escape') {
                     toggleSearchOverlay();
@@ -57,39 +57,40 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
             
-            // Set up dynamic search
+            
             setupDynamicSearch();
         });
     }
     
+    // Εμφανίζει ή κρύβει το overlay αναζήτησης
     function toggleSearchOverlay() {
         const searchOverlay = document.querySelector('.search-overlay');
         if (!searchOverlay) return;
         
         if (searchOverlay.classList.contains('active')) {
-            // Hide the overlay
+           
             searchOverlay.classList.remove('active');
             
-            // Remove the overlay after animation completes
+            
             setTimeout(() => {
                 if (searchOverlay.parentNode) {
                     searchOverlay.parentNode.removeChild(searchOverlay);
                 }
             }, 300);
         } else {
-            // Show the overlay
+            
             searchOverlay.classList.add('active');
         }
     }
     
-    // Function to set up dynamic search
+    //Δυναμική αναζήτηση προϊόντων με κλήσεις API καθώς πληκτρολογεί ο χρήστης
     function setupDynamicSearch() {
         const searchInput = document.getElementById('header-search-input');
         const searchResults = document.querySelector('.search-results');
         
         if (!searchInput || !searchResults) return;
         
-        // Add event listener for input changes
+        
         searchInput.addEventListener('input', debounce(function() {
             const query = searchInput.value.trim();
             
@@ -99,11 +100,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
             
-            // Show loading state
+            
             searchResults.innerHTML = '<div class="search-loading">Searching...</div>';
             searchResults.style.display = 'block';
             
-            // Fetch search results from API
+            
             fetch(`/api/search?query=${encodeURIComponent(query)}`)
                 .then(response => {
                     if (!response.ok) {
@@ -118,26 +119,26 @@ document.addEventListener('DOMContentLoaded', function() {
                     console.error('Error fetching search results:', error);
                     searchResults.innerHTML = '<div class="search-error">Sorry, something went wrong. Please try again.</div>';
                 });
-        }, 300)); // Debounce to avoid too many requests
+        }, 300)); 
         
-        // Add event listener for form submission
+        
         const searchForm = document.querySelector('.header-search-form');
         searchForm.addEventListener('submit', function(e) {
             const query = searchInput.value.trim();
             if (query.length < 2) {
-                e.preventDefault(); // Don't submit if query is too short
+                e.preventDefault(); 
             }
         });
     }
     
-    // Function to display search results organized by category
+    // Εμφανίζει τα αποτελέσματα αναζήτησης ανα κατηγορία
     function displaySearchResults(products, resultsContainer) {
         if (!products || products.length === 0) {
             resultsContainer.innerHTML = '<div class="no-results">No products found</div>';
             return;
         }
         
-        // Group products by category
+        
         const categorizedProducts = {};
         
         products.forEach(product => {
@@ -148,13 +149,13 @@ document.addEventListener('DOMContentLoaded', function() {
             categorizedProducts[category].push(product);
         });
         
-        // Build HTML for results
+        
         let resultsHTML = '';
         
-        // Add summary of results
+        
         resultsHTML += `<div class="search-summary">${products.length} products found</div>`;
         
-        // Create section for each category
+        
         for (const category in categorizedProducts) {
             resultsHTML += `
                 <div class="search-category">
@@ -162,7 +163,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="search-category-products">
             `;
             
-            // Add products in this category
+            
             categorizedProducts[category].forEach(product => {
                 resultsHTML += `
                     <a href="product-detail.html?product_id=${product._id}" class="search-product">
@@ -183,7 +184,7 @@ document.addEventListener('DOMContentLoaded', function() {
             `;
         }
         
-        // Add view all results link
+        
         resultsHTML += `
             <div class="search-view-all">
                 <a href="products.html?query=${encodeURIComponent(document.getElementById('header-search-input').value)}">
@@ -192,16 +193,16 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
         `;
         
-        // Update results container
+        
         resultsContainer.innerHTML = resultsHTML;
     }
     
-    // Helper function to capitalize first letter
+    //Βοηθητική συνάρτηση για να κεφαλαιοποιεί το πρώτο γράμμα μιας λέξης
     function capitalizeFirstLetter(string) {
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
     
-    // Debounce function to limit API calls
+    // Αμα εχουμε πολλαπλές κλήσεις σε σύντομο χρονικό διάστημα
     function debounce(func, delay) {
         let timeoutId;
         return function() {
@@ -214,7 +215,7 @@ document.addEventListener('DOMContentLoaded', function() {
         };
     }
     
-    // Add CSS for search overlay
+    //css για το overlay αναζήτησης
     const searchStyle = document.createElement('style');
     searchStyle.textContent = `
         .search-overlay {
